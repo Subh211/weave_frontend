@@ -43,6 +43,7 @@ dependencies:
   cookie_jar: ^4.0.8
   flutter_secure_storage: ^9.2.2
   flutter_bloc: ^8.1.5
+  image: ^4.2.0
 
 dev_dependencies:
   flutter_test:

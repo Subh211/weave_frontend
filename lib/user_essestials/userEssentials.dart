@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'dart:convert';
+import 'package:image/image.dart' as img;
+
 
 class weaveText extends StatelessWidget {
   final double screenHeight;
@@ -260,63 +263,5 @@ class CustomTextButton extends StatelessWidget {
   }
 }
 
-class ImagePickerButton extends StatefulWidget {
-  final double screenHeight;
-  final TextEditingController? controller;
 
-  ImagePickerButton({
-    required this.screenHeight,
-    this.controller,
-  });
 
-  @override
-  _ImagePickerButtonState createState() => _ImagePickerButtonState();
-}
-
-class _ImagePickerButtonState extends State<ImagePickerButton> {
-  File? image;
-
-  Future pickImage() async {
-    try {
-      final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (pickedFile == null) return;
-
-      final photoURL = File(pickedFile.path);
-      setState(() => this.image = photoURL);
-
-      // Update the controller with the image path
-      if (widget.controller != null) {
-        widget.controller!.text = pickedFile.path;
-      }
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () => pickImage(),
-      style: TextButton.styleFrom(
-        backgroundColor: Colors.white, // Background color (light purple)
-        padding: EdgeInsets.symmetric(horizontal: 20), // Padding
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10), // Rounded corners
-          side: BorderSide(color: Colors.black, width: 2.5), // Border
-        ),
-        shadowColor: Colors.black, // Shadow color
-        elevation: 15, // Elevation
-      ),
-      child: Text(
-        'Pick an Image',
-        style: GoogleFonts.poppins(
-          textStyle: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: widget.screenHeight * 0.018,
-            color: Colors.black,
-          ),
-        ),
-      ),
-    );
-  }
-}

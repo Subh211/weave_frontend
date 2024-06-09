@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:equatable/equatable.dart';
 
 abstract class RegistrationEvent extends Equatable {
@@ -14,7 +15,7 @@ class RegisterUser extends RegistrationEvent {
   final String confirmPassword;
   final String displayName;
   final String bio;
-  final String photoURL;
+  final File? photoURL;
 
   const RegisterUser({
     required this.email,
@@ -23,10 +24,17 @@ class RegisterUser extends RegistrationEvent {
     required this.confirmPassword,
     required this.displayName,
     required this.bio,
-    required this.photoURL,
+    this.photoURL,
   });
 
   @override
-  List<Object> get props =>
-      [email, name, password, confirmPassword, displayName, bio, photoURL];
+  List<Object> get props => [
+    email,
+    name,
+    password,
+    confirmPassword,
+    displayName,
+    bio,
+    photoURL?.path ?? 'null', // Use file path or 'null' string if no file
+  ];
 }

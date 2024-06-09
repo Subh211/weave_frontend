@@ -1,24 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import 'package:weave_frontend/userFeed/ui/feed.dart';
 import 'package:weave_frontend/userSignUp/bloc/registration_event.dart';
-import 'package:weave_frontend/userSinglePost/ui/singlePost.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
 import '../bloc/registration_bloc.dart';
 import '../bloc/registration_state.dart';
-import 'package:weave_frontend/userSignUp/bloc/registration_state.dart';
-import 'package:weave_frontend/userSignUp/bloc/registration_bloc.dart';
-// Import the Feed screen file
 
-class Getmail extends StatelessWidget {
+class Getmail extends StatefulWidget {
+  @override
+  _GetmailState createState() => _GetmailState();
+}
+
+class _GetmailState extends State<Getmail> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   final TextEditingController displayNameController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
-  final TextEditingController photoURLController = TextEditingController();
+  File? image;
+
+  Future pickImage() async {
+    try {
+      XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedFile == null) return;
+
+      final photoURL = File(pickedFile.path);
+
+      setState(() => this.image = photoURL);
+    } on PlatformException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to pick image: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,22 +48,17 @@ class Getmail extends StatelessWidget {
 
     return Scaffold(
       body: BlocProvider(
-        create: (context) => RegistrationBloc('http://localhost:3000'),
+        create: (context) => RegistrationBloc('https://weave-backend-pyfu.onrender.com'),
         child: BlocListener<RegistrationBloc, RegistrationState>(
           listener: (context, state) {
             if (state is RegistrationSuccess) {
-              // Show success message
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text(state.message)));
-              // Navigate to the Feed screen
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        Feed()), // Replace Feed() with your actual Feed screen
+                MaterialPageRoute(builder: (context) => Feed()),
               );
             } else if (state is RegistrationFailure) {
-              // Show failure message
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text(state.error)));
             }
@@ -54,8 +70,7 @@ class Getmail extends StatelessWidget {
               }
               return SingleChildScrollView(
                 child: Container(
-                  height:
-                      screenHeight, // Ensures the container takes the full height of the screen
+                  height: screenHeight,
                   child: Column(
                     children: [
                       Expanded(
@@ -80,7 +95,7 @@ class Getmail extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: Colors.transparent,
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(35)),
+                                  BorderRadius.all(Radius.circular(35)),
                                   border: Border.all(
                                     color: Colors.black,
                                     width: 0.8,
@@ -89,15 +104,14 @@ class Getmail extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     Flexible(
-                                      flex: 8,
+                                      flex: 7,
                                       child: headerText(
                                         text: 'S i g n  U p',
                                         screenHeight: screenHeight,
                                       ),
                                     ),
-                                    Flexible(flex: 1, child: Container()),
                                     Flexible(
-                                      flex: 3,
+                                      flex: 4,
                                       child: textFields(
                                         controller: nameController,
                                         screenHeight: screenHeight,
@@ -106,10 +120,10 @@ class Getmail extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: screenHeight * 0.015,
+                                      height: screenHeight * 0.005,
                                     ),
                                     Flexible(
-                                      flex: 3,
+                                      flex: 4,
                                       child: textFields(
                                         controller: emailController,
                                         screenHeight: screenHeight,
@@ -118,10 +132,10 @@ class Getmail extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: screenHeight * 0.015,
+                                      height: screenHeight * 0.005,
                                     ),
                                     Flexible(
-                                      flex: 3,
+                                      flex: 4,
                                       child: textFields(
                                         star: true,
                                         controller: passwordController,
@@ -131,10 +145,10 @@ class Getmail extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: screenHeight * 0.015,
+                                      height: screenHeight * 0.005,
                                     ),
                                     Flexible(
-                                      flex: 3,
+                                      flex: 4,
                                       child: textFields(
                                         star: true,
                                         controller: confirmPasswordController,
@@ -144,10 +158,10 @@ class Getmail extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: screenHeight * 0.015,
+                                      height: screenHeight * 0.005,
                                     ),
                                     Flexible(
-                                      flex: 3,
+                                      flex: 4,
                                       child: textFields(
                                         controller: displayNameController,
                                         screenHeight: screenHeight,
@@ -156,10 +170,10 @@ class Getmail extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: screenHeight * 0.015,
+                                      height: screenHeight * 0.005,
                                     ),
                                     Flexible(
-                                      flex: 3,
+                                      flex: 4,
                                       child: textFields(
                                         controller: bioController,
                                         screenHeight: screenHeight,
@@ -168,14 +182,32 @@ class Getmail extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: screenHeight * 0.015,
+                                      height: screenHeight * 0.005,
                                     ),
                                     Flexible(
-                                        flex: 4,
-                                        child: ImagePickerButton(
-                                          controller: photoURLController,
-                                          screenHeight: screenHeight,
-                                        )),
+                                      flex: 4,
+                                      child: TextButton(
+                                        onPressed: () => pickImage(),
+                                        style: TextButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          padding: EdgeInsets.symmetric(horizontal: 20),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                            side: BorderSide(color: Colors.black, width: 2.5),
+                                          ),
+                                          shadowColor: Colors.black,
+                                          elevation: 15,
+                                        ),
+                                        child: Text(
+                                          'Pick an Image',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: screenHeight * 0.018,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                     SizedBox(
                                       height: screenHeight * 0.012,
                                     ),
@@ -195,26 +227,19 @@ class Getmail extends StatelessWidget {
                                         onPressed: () {
                                           final email = emailController.text;
                                           final name = nameController.text;
-                                          final password =
-                                              passwordController.text;
-                                          final confirmPassword =
-                                              confirmPasswordController.text;
-                                          final displayName =
-                                              displayNameController.text;
+                                          final password = passwordController.text;
+                                          final confirmPassword = confirmPasswordController.text;
+                                          final displayName = displayNameController.text;
                                           final bio = bioController.text;
-                                          final photoURL =
-                                              photoURLController.text;
 
-                                          BlocProvider.of<RegistrationBloc>(
-                                                  context)
-                                              .add(RegisterUser(
+                                          BlocProvider.of<RegistrationBloc>(context).add(RegisterUser(
                                             email: email,
                                             name: name,
                                             password: password,
                                             confirmPassword: confirmPassword,
                                             displayName: displayName,
                                             bio: bio,
-                                            photoURL: photoURL,
+                                            photoURL: image, // Pass the File object
                                           ));
                                         },
                                         horizontalPadding: 55,

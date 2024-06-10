@@ -64,9 +64,12 @@ class Updateuser extends StatelessWidget {
                               Flexible(flex: 2, child: Container()),
                               Flexible(
                                   flex: 4,
-                                  child: ImagePickerButton(
+                                  child: textFields(
                                     screenHeight: screenHeight,
-                                  )),
+                                    screenWidth: screenWidth,
+                                    hintText: 'bio',
+                                  ),
+                              ),
                               Flexible(flex: 1, child: Container()),
                               Flexible(
                                 flex: 3,

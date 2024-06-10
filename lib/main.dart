@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weave_frontend/userFeed/ui/feed.dart';
 import 'package:weave_frontend/userSignUp/ui/userSignUp.dart';
+
 
 void main() {
   runApp(const MyApp());

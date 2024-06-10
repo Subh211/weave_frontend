@@ -143,14 +143,21 @@ class belowText extends StatelessWidget {
 class boy extends StatelessWidget {
   final double screenHeight;
   final double screenWidth;
+  final double? left;
+  final double? top;
 
-  boy({required this.screenHeight, required this.screenWidth});
+  boy({
+    required this.screenHeight,
+    required this.screenWidth,
+    this.left,
+    this.top
+  });
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
-        left: -14,
-        top: 140,
+        left: left ??  -14,
+        top: top ?? 140,
         child: Container(
           height: screenHeight * 0.35,
           width: screenWidth * 0.14,
@@ -162,14 +169,21 @@ class boy extends StatelessWidget {
 class girl extends StatelessWidget {
   final double screenHeight;
   final double screenWidth;
+  final double? right;
+  final double? top;
 
-  girl({required this.screenHeight, required this.screenWidth});
+  girl({
+    required this.screenHeight,
+    required this.screenWidth,
+    this.right,
+    this.top
+  });
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
-        right: -25,
-        top: 140,
+        right: right ?? -25,
+        top: top ?? 140,
         child: Container(
           height: screenHeight * 0.38,
           width: screenWidth * 0.33,

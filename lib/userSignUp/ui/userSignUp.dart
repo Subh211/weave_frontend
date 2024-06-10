@@ -255,10 +255,14 @@ class _GetmailState extends State<Getmail> {
                               ),
                               boy(
                                   screenHeight: screenHeight,
-                                  screenWidth: screenWidth),
+                                  screenWidth: screenWidth,
+                                  top: 300,
+                              ),
                               girl(
                                   screenHeight: screenHeight,
-                                  screenWidth: screenWidth),
+                                  screenWidth: screenWidth,
+                                  top: 300,
+                              ),
                             ],
                           ),
                         ),

@@ -23,15 +23,9 @@ class SignOutBloc extends Bloc<SignOutEvent, SignOutState> {
     try {
       final dio = Dio();
 
-      // Create FormData
-      FormData formData = FormData.fromMap({
-        'email': event.email,
-        'password': event.password,
-      });
 
       final response = await dio.post(
-        'https://weave-backend-pyfu.onrender.com/api/v1/user/signout',
-        data: formData,
+        'https://weave-backend-pyfu.onrender.com/api/v1/user/logout',
         options: Options(
           headers: {
             'Content-Type': 'multipart/form-data',

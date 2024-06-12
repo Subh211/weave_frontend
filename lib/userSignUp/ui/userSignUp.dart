@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:weave_frontend/userFeed/ui/feed.dart';
+import 'package:weave_frontend/userLogIn/ui/userLogIn.dart';
 import 'package:weave_frontend/userSignUp/bloc/registration_event.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
 import '../bloc/registration_bloc.dart';
@@ -216,7 +217,10 @@ class _GetmailState extends State<Getmail> {
                                       child: belowText(
                                         text: 'Already have account?',
                                         screenHeight: screenHeight,
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context, MaterialPageRoute(builder: (context) => SignIn()));
+                                        },
                                         buttonText: 'Sign In',
                                       ),
                                     ),

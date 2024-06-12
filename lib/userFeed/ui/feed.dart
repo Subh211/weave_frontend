@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:weave_frontend/optionScreen/ui/optionScreen.dart';
 import 'package:weave_frontend/userProfile/ui/profile.dart';
 import 'package:weave_frontend/userSinglePost/ui/singlePost.dart';
 
@@ -49,6 +50,12 @@ class _FeedState extends State<Feed> {
         ),
       ),
       actions: [
+        IconButton(
+          icon: FaIcon(FontAwesomeIcons.bars),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => OptionScreen()));
+          },
+        ),
         IconButton(
           icon: FaIcon(FontAwesomeIcons.bell),
           onPressed: () {},

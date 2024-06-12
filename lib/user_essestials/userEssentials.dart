@@ -277,5 +277,32 @@ class CustomTextButton extends StatelessWidget {
   }
 }
 
+class optionText extends StatelessWidget {
+  final double screenHeight;
+  final String text;
+
+  optionText({
+    required this.screenHeight,
+    required this.text
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Text(
+        text,
+        style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                fontSize: screenHeight*0.025,
+                color: Color.fromRGBO(165, 179, 158, 1),
+                fontWeight: FontWeight.w600,
+        ),
+      ),
+      )
+    );
+
+  }
+}
 
 

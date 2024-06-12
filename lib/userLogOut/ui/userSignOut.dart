@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weave_frontend/userLogIn/ui/userLogIn.dart';
 import 'package:weave_frontend/userLogOut/bloc/signOut_bloc.dart';
+import 'package:weave_frontend/userLogOut/bloc/signOut_event.dart';
 import 'package:weave_frontend/userLogOut/bloc/signOut_state.dart';
 import 'package:weave_frontend/userSignUp/ui/userSignUp.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
@@ -119,7 +120,11 @@ class SignOut extends StatelessWidget {
                                           Flexible(
                                             flex: 4,
                                             child: CustomTextButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                BlocProvider.of<SignOutBloc>(context).add(SignOutButtonPressed(
+
+                                                ));
+                                              },
                                               horizontalPadding: 55,
                                               buttonText: 'Log Out',
                                               screenHeight: screenHeight,

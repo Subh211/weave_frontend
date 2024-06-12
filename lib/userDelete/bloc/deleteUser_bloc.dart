@@ -49,9 +49,14 @@ class DeleteUserBloc extends Bloc<DeleteUserEvent, DeleteUserState> {
       }
     } catch (error) {
       if (error is DioError) {
+        print('DioError: ${error.toString()}');
+        if (error.response != null) {
+          print('Error Response Data: ${error.response?.data}');
+        }
         final errorMessage = error.response?.data['message'] ?? 'An error occurred. Please try again.';
-        emit(DeleteUserFailure(errorMessage, error: 'An error to delete account. Please try again.'));
+        emit(DeleteUserFailure(errorMessage, error: errorMessage));
       } else {
+        print('Error: ${error.toString()}');
         emit(DeleteUserFailure('An error occurred. Please try again.', error: 'An error occurred. Please try again.'));
       }
     }

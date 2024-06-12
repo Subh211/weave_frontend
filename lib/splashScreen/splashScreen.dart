@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _navigateBasedOnLoginStatus() async {
     // Wait for 3 seconds
-    await Future.delayed(Duration(seconds: 6));
+    await Future.delayed(Duration(seconds: 3));
 
     // Check login status
     String? token = await secureStorage.read(key: 'token');

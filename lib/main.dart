@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:weave_frontend/userSignUp/ui/userSignUp.dart';
-
+import 'package:weave_frontend/optionScreen/ui/optionScreen.dart';
+import 'package:weave_frontend/splashScreen/splashScreen.dart';
+import 'package:weave_frontend/userFeed/ui/feed.dart';
+import 'package:weave_frontend/userLogIn/ui/userLogIn.dart';
+import 'package:weave_frontend/userLogOut/ui/userSignOut.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +22,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: Getmail());
+        home: SignIn());
   }
 }
 

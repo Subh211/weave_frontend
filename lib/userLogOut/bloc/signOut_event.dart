@@ -10,14 +10,9 @@ abstract class SignOutEvent extends Equatable {
 }
 
 class SignOutButtonPressed extends SignOutEvent {
-  final String email;
-  final String password;
 
-  const SignOutButtonPressed({
-    required this.email,
-    required this.password});
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [];
 }
 

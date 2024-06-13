@@ -11,13 +11,14 @@ abstract class UpdateUserEvent extends Equatable {
 
 class UpdateUserButtonPressed extends UpdateUserEvent {
   final String displayName;
+  final String bio;
   final File? photoURL;
 
 
   const UpdateUserButtonPressed({
-
-     required this.displayName,
-     this.photoURL,
+    required this.displayName,
+    required this.bio,
+    this.photoURL,
   });
 
   @override

@@ -3,12 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:cookie_jar/cookie_jar.dart';
-//import 'registration_event.dart';
-//import 'registration_state.dart';
-import 'package:weave_frontend/userSignUp/bloc/registration_event.dart';
-import 'package:weave_frontend/userSignUp/bloc/registration_state.dart';
-
-
+import 'registration_event.dart';
+import 'registration_state.dart';
 
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   final String baseUrl;
@@ -25,7 +21,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     try {
       final dio = Dio();
 
-      //Create FormData
+      // Create FormData
       FormData formData = FormData.fromMap({
         'email': event.email,
         'name': event.name,
@@ -33,29 +29,12 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         'confirmPassword': event.confirmPassword,
         'displayName': event.displayName,
         'bio': event.bio,
-        //'photoURL': event.photoURL, // Send the base64 image string
-        'photoURL': await MultipartFile.fromFile(event.photoURL!.path),
+        if (event.photoURL != null)
+          'photoURL': await MultipartFile.fromFile(event.photoURL!.path),
       });
 
-      // // Create FormData
-      // Map<String, dynamic> formDataMap = {
-      //   'email': event.email,
-      //   'name': event.name,
-      //   'password': event.password,
-      //   'confirmPassword': event.confirmPassword,
-      //   'displayName': event.displayName,
-      //   'bio': event.bio,
-      // };
-      //
-      // if (event.photoURL != null) {
-      //   formDataMap['photoURL'] = await MultipartFile.fromFile(event.photoURL!.path);
-      // }
-      //
-      // FormData formData = FormData.fromMap(formDataMap);
-
-
       final response = await dio.post(
-        'https://weave-backend-pyfu.onrender.com/api/v1/user/register',
+        '$baseUrl/api/v1/user/register',
         data: formData,
         options: Options(
           headers: {
@@ -65,10 +44,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       );
 
       if (response.statusCode == 200) {
-        final responseData = response.data.user;
-
-        print('response: $response ');
-        print('responsedata: $responseData');
+        final responseData = response.data;
 
         // Save token to secure storage
         await secureStorage.write(key: 'token', value: responseData['token']);
@@ -76,7 +52,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         emit(RegistrationSuccess(responseData['message']));
       } else {
         final errorMessage = response.data['message'] ?? 'Failed to register. Please try again.';
-        emit(RegistrationFailure(errorMessage, error1: 'Error'));
+        emit(RegistrationFailure(errorMessage));
       }
     } catch (error) {
       if (error is DioError) {
@@ -85,10 +61,10 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
           print('Error Response Data: ${error.response?.data}');
         }
         final errorMessage = error.response?.data['message'] ?? 'An error occurred. Please try again.';
-        emit(RegistrationFailure(errorMessage, error1: errorMessage));
+        emit(RegistrationFailure(errorMessage));
       } else {
         print('Error: ${error.toString()}');
-        emit(RegistrationFailure('An error occurred. Please try again.', error1: 'An error occurred. Please try again.'));
+        emit(RegistrationFailure('An error occurred. Please try again.'));
       }
     }
   }

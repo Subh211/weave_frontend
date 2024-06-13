@@ -53,17 +53,15 @@ class _GetmailState extends State<Getmail> {
         child: BlocListener<RegistrationBloc, RegistrationState>(
           listener: (context, state) {
             if (state is RegistrationSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
-              Navigator.pushReplacement(
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(state.message)));
+              Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Feed()), // Use pushReplacement to clear the stack
+                MaterialPageRoute(builder: (context) => Feed()),
               );
             } else if (state is RegistrationFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
-              );
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(state.error)));
             }
           },
           child: BlocBuilder<RegistrationBloc, RegistrationState>(
@@ -220,8 +218,7 @@ class _GetmailState extends State<Getmail> {
                                         text: 'Already have account?',
                                         screenHeight: screenHeight,
                                         onPressed: () {
-                                          Navigator.push(
-                                            context, MaterialPageRoute(builder: (context) => SignIn()));
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()));
                                         },
                                         buttonText: 'Sign In',
                                       ),
@@ -245,7 +242,7 @@ class _GetmailState extends State<Getmail> {
                                             confirmPassword: confirmPassword,
                                             displayName: displayName,
                                             bio: bio,
-                                            photoURL: image, // Pass the File object
+                                            photoURL: image, // Pass the File object, which can be null
                                           ));
                                         },
                                         horizontalPadding: 55,
@@ -261,14 +258,10 @@ class _GetmailState extends State<Getmail> {
                               ),
                               boy(
                                   screenHeight: screenHeight,
-                                  screenWidth: screenWidth,
-                                  top: 300,
-                              ),
+                                  screenWidth: screenWidth),
                               girl(
                                   screenHeight: screenHeight,
-                                  screenWidth: screenWidth,
-                                  top: 300,
-                              ),
+                                  screenWidth: screenWidth),
                             ],
                           ),
                         ),

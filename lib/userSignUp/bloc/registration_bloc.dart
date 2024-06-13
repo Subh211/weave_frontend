@@ -25,33 +25,33 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     try {
       final dio = Dio();
 
-      // Create FormData
-      // FormData formData = FormData.fromMap({
-      //   'email': event.email,
-      //   'name': event.name,
-      //   'password': event.password,
-      //   'confirmPassword': event.confirmPassword,
-      //   'displayName': event.displayName,
-      //   'bio': event.bio,
-      //   //'photoURL': event.photoURL, // Send the base64 image string
-      //   'photoURL': await MultipartFile.fromFile(event.photoURL!.path),
-      // });
-
-      // Create FormData
-      Map<String, dynamic> formDataMap = {
+      //Create FormData
+      FormData formData = FormData.fromMap({
         'email': event.email,
         'name': event.name,
         'password': event.password,
         'confirmPassword': event.confirmPassword,
         'displayName': event.displayName,
         'bio': event.bio,
-      };
+        //'photoURL': event.photoURL, // Send the base64 image string
+        'photoURL': await MultipartFile.fromFile(event.photoURL!.path),
+      });
 
-      if (event.photoURL != null) {
-        formDataMap['photoURL'] = await MultipartFile.fromFile(event.photoURL!.path);
-      }
-
-      FormData formData = FormData.fromMap(formDataMap);
+      // // Create FormData
+      // Map<String, dynamic> formDataMap = {
+      //   'email': event.email,
+      //   'name': event.name,
+      //   'password': event.password,
+      //   'confirmPassword': event.confirmPassword,
+      //   'displayName': event.displayName,
+      //   'bio': event.bio,
+      // };
+      //
+      // if (event.photoURL != null) {
+      //   formDataMap['photoURL'] = await MultipartFile.fromFile(event.photoURL!.path);
+      // }
+      //
+      // FormData formData = FormData.fromMap(formDataMap);
 
 
       final response = await dio.post(
@@ -76,16 +76,19 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         emit(RegistrationSuccess(responseData['message']));
       } else {
         final errorMessage = response.data['message'] ?? 'Failed to register. Please try again.';
-        emit(RegistrationFailure(errorMessage));
+        emit(RegistrationFailure(errorMessage, error1: 'Error'));
       }
     } catch (error) {
       if (error is DioError) {
-        print('Error: ${error.toString()}');
+        print('DioError: ${error.toString()}');
+        if (error.response != null) {
+          print('Error Response Data: ${error.response?.data}');
+        }
         final errorMessage = error.response?.data['message'] ?? 'An error occurred. Please try again.';
-        emit(RegistrationFailure(errorMessage));
+        emit(RegistrationFailure(errorMessage, error1: errorMessage));
       } else {
         print('Error: ${error.toString()}');
-        emit(RegistrationFailure('An error occurred. Please try again.'));
+        emit(RegistrationFailure('An error occurred. Please try again.', error1: 'An error occurred. Please try again.'));
       }
     }
   }

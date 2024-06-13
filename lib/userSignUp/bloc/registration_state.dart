@@ -23,7 +23,7 @@ class RegistrationSuccess extends RegistrationState {
 class RegistrationFailure extends RegistrationState {
   final String error;
 
-  const RegistrationFailure(this.error);
+  const RegistrationFailure(this.error,  {required String error1});
 
   @override
   List<Object> get props => [error];

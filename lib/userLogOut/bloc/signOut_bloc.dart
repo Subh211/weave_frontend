@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
@@ -12,23 +13,39 @@ class SignOutBloc extends Bloc<SignOutEvent, SignOutState> {
   final String baseUrl;
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
   final CookieJar cookieJar = CookieJar();
+  final String token;
 
-  SignOutBloc(this.baseUrl) : super(SignOutInitial()) {
+
+  SignOutBloc(this.baseUrl, this.token) : super(SignOutInitial()) {
     on<SignOutButtonPressed>(_onSignOutUser);
+  }
+
+  Future<String?> _getStoredToken() async {
+    final storedToken = await secureStorage.read(key: 'token');
+    print('Stored Token: $storedToken'); // Add this line
+    return storedToken;
   }
 
   Future<void> _onSignOutUser(
       SignOutButtonPressed event, Emitter<SignOutState> emit) async {
     emit(SignOutLoading());
+
+    final storedToken = await _getStoredToken();
+    if (storedToken == null) {
+      emit(SignOutFailure('Token is missing', error: 'Token is missing'));
+      return;
+    }
+
     try {
       final dio = Dio();
 
 
-      final response = await dio.post(
+      final response = await dio.get(
         'https://weave-backend-pyfu.onrender.com/api/v1/user/logout',
         options: Options(
           headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json',
+            HttpHeaders.authorizationHeader: 'Bearer $storedToken',
           },
         ),
       );

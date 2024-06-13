@@ -124,8 +124,7 @@ class _FeedState extends State<Feed> {
             IconButton(
               icon: CircleAvatar(
                 radius: 15,
-                backgroundImage: NetworkImage(
-                    'https://res.cloudinary.com/dlramkpev/image/upload/v1717303554/lms/vnffvzde5cc3bgvqtar5.png'),
+                backgroundImage: AssetImage('assests/images/vk2.jpeg'),
               ),
               onPressed: () => _onItemTapped(4),
             ),

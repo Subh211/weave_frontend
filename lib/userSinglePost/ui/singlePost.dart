@@ -1,482 +1,179 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:weave_frontend/models/postModel.dart';
+import 'package:weave_frontend/userSinglePost/bloc/post_repository.dart';
+import 'package:weave_frontend/userSinglePost/bloc/singlePost_bloc.dart';
+import 'package:weave_frontend/userSinglePost/bloc/singlePost_event.dart';
+import 'package:weave_frontend/userSinglePost/bloc/singlePost_state.dart';
 
+class Posts extends StatelessWidget {
+  final PostRepository postRepository = PostRepository();
 
-class Posts extends StatefulWidget{
   @override
-
-  State<StatefulWidget> createState() {
-    return _PostsState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => PostBloc(postRepository)..add(FetchPosts()),
+      child: PostsView(),
+    );
   }
 }
 
-class _PostsState extends State<Posts> {
+class PostsView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: BlocBuilder<PostBloc, PostState>(
+        builder: (context, state) {
+          if (state is PostLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is PostLoaded) {
+            return ListView.builder(
+              itemCount: state.posts.length,
+              itemBuilder: (context, index) {
+                final post = state.posts[index];
+                return PostItem(post: post);
+              },
+            );
+          } else if (state is PostError) {
+            return Center(child: Text('Failed to load posts: ${state.message}'));
+          } else if (state is PostAuthenticationError) {
+            return Center(child: Text('Authentication error: ${state.message}'));
+          }
+          return Center(child: Text('No posts'));
+        },
+      ),
+    );
+  }
+}
+
+class PostItem extends StatelessWidget {
+  final Post post;
+
+  const PostItem({required this.post});
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-          return Scaffold(
-            body:  SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                      //height: screenHeight*0.625,
-                      width: screenWidth,
-                      child: Column(
-                        children: [
-                           Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width: screenWidth*0.025,
-                                  ),
-                                  Container(
-                                    height: screenHeight*0.065,
-                                    width: screenWidth*0.09,
-                                    child: CircleAvatar(
-                                      backgroundImage: AssetImage('assests/images/vk1.jpeg'),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: screenWidth*0.025,
-                                  ),
-                                  Text('displayName',style:
-                                  GoogleFonts.poppins(
-                                      textStyle: TextStyle(
-                                          color: Colors.black87,
-                                          fontWeight: FontWeight.w600
-                                      )
-                                  ),)
-                                ],
-                              ),
-                           Container(
-                             height: screenHeight*0.50,
-                              width: screenWidth,
-                              child: Image.asset('assests/images/vk2.jpeg',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          Container(
-                            height: screenHeight*0.06,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                              SizedBox(
-                              width: screenWidth*0.01,
-                            ),
-                                IconButton(
-                                    onPressed: (){},
-                                    icon: FaIcon(FontAwesomeIcons.heart)),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: FaIcon(FontAwesomeIcons.comments))
-                                          ]
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: screenWidth*0.04,
-                              ),
-                              Text('Liked by 15 others',style: GoogleFonts.lora(
-                                textStyle: TextStyle(
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w600,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              ),
-                            ],
-                          ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: screenWidth*0.04,
-                                ),
-                                Text('displayName',style:
-                                GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                        color: Colors.black87,
-                                        fontWeight: FontWeight.w800
-                                    )
-                                ),),
-                                SizedBox(
-                                  width: screenWidth*0.02,
-                                ),
-                                Flexible(
-                                  child: Text('caption',style: GoogleFonts.lora(
-                                      textStyle: TextStyle(
-                                        color: Colors.black87,
-                                        fontWeight: FontWeight.w500,
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: screenWidth*0.04,
-                              ),
-                              Text('All comments',style:
-                              GoogleFonts.lora(
-                                  textStyle: TextStyle(
-                                      color: Colors.grey[400],
-                                      fontWeight: FontWeight.w500
-                                  )
-                              ),),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  Container(
-                    //height: screenHeight*0.625,
-                    width: screenWidth,
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: screenWidth*0.025,
-                            ),
-                            Container(
-                              height: screenHeight*0.065,
-                              width: screenWidth*0.09,
-                              child: CircleAvatar(
-                                backgroundImage: AssetImage('assests/images/vk1.jpeg'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: screenWidth*0.025,
-                            ),
-                            Text('displayName',style:
-                            GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w600
-                                )
-                            ),)
-                          ],
-                        ),
-                        Container(
-                          height: screenHeight*0.50,
-                          width: screenWidth,
-                          child: Image.asset('assests/images/vk2.jpeg',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Container(
-                          height: screenHeight*0.06,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: screenWidth*0.01,
-                                ),
-                                IconButton(
-                                    onPressed: (){},
-                                    icon: FaIcon(FontAwesomeIcons.heart)),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: FaIcon(FontAwesomeIcons.comments))
-                              ]
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: screenWidth*0.04,
-                            ),
-                            Text('Liked by 15 others',style: GoogleFonts.lora(
-                              textStyle: TextStyle(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w600,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: screenWidth*0.04,
-                            ),
-                            Text('displayName',style:
-                            GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w800
-                                )
-                            ),),
-                            SizedBox(
-                              width: screenWidth*0.02,
-                            ),
-                            Flexible(
-                              child: Text('caption',style: GoogleFonts.lora(
-                                textStyle: TextStyle(
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w500,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: screenWidth*0.04,
-                            ),
-                            Text('All comments',style:
-                            GoogleFonts.lora(
-                                textStyle: TextStyle(
-                                    color: Colors.grey[400],
-                                    fontWeight: FontWeight.w500
-                                )
-                            ),),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    //height: screenHeight*0.625,
-                    width: screenWidth,
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: screenWidth*0.025,
-                            ),
-                            Container(
-                              height: screenHeight*0.065,
-                              width: screenWidth*0.09,
-                              child: CircleAvatar(
-                                backgroundImage: AssetImage('assests/images/vk1.jpeg'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: screenWidth*0.025,
-                            ),
-                            Text('displayName',style:
-                            GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w600
-                                )
-                            ),)
-                          ],
-                        ),
-                        Container(
-                          height: screenHeight*0.50,
-                          width: screenWidth,
-                          child: Image.asset('assests/images/vk2.jpeg',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Container(
-                          height: screenHeight*0.06,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: screenWidth*0.01,
-                                ),
-                                IconButton(
-                                    onPressed: (){},
-                                    icon: FaIcon(FontAwesomeIcons.heart)),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: FaIcon(FontAwesomeIcons.comments))
-                              ]
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: screenWidth*0.04,
-                            ),
-                            Text('Liked by 15 others',style: GoogleFonts.lora(
-                              textStyle: TextStyle(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w600,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: screenWidth*0.04,
-                            ),
-                            Text('displayName',style:
-                            GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w800
-                                )
-                            ),),
-                            SizedBox(
-                              width: screenWidth*0.02,
-                            ),
-                            Flexible(
-                              child: Text('caption',style: GoogleFonts.lora(
-                                textStyle: TextStyle(
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w500,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: screenWidth*0.04,
-                            ),
-                            Text('All comments',style:
-                            GoogleFonts.lora(
-                                textStyle: TextStyle(
-                                    color: Colors.grey[400],
-                                    fontWeight: FontWeight.w500
-                                )
-                            ),),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    //height: screenHeight*0.625,
-                    width: screenWidth,
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: screenWidth*0.025,
-                            ),
-                            Container(
-                              height: screenHeight*0.065,
-                              width: screenWidth*0.09,
-                              child: CircleAvatar(
-                                backgroundImage: AssetImage('assests/images/vk1.jpeg'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: screenWidth*0.025,
-                            ),
-                            Text('displayName',style:
-                            GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w600
-                                )
-                            ),)
-                          ],
-                        ),
-                        Container(
-                          height: screenHeight*0.50,
-                          width: screenWidth,
-                          child: Image.asset('assests/images/vk2.jpeg',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Container(
-                          height: screenHeight*0.06,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: screenWidth*0.01,
-                                ),
-                                IconButton(
-                                    onPressed: (){},
-                                    icon: FaIcon(FontAwesomeIcons.heart)),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: FaIcon(FontAwesomeIcons.comments))
-                              ]
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: screenWidth*0.04,
-                            ),
-                            Text('Liked by 15 others',style: GoogleFonts.lora(
-                              textStyle: TextStyle(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w600,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: screenWidth*0.04,
-                            ),
-                            Text('displayName',style:
-                            GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w800
-                                )
-                            ),),
-                            SizedBox(
-                              width: screenWidth*0.02,
-                            ),
-                            Flexible(
-                              child: Text('caption',style: GoogleFonts.lora(
-                                textStyle: TextStyle(
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w500,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: screenWidth*0.04,
-                            ),
-                            Text('All comments',style:
-                            GoogleFonts.lora(
-                                textStyle: TextStyle(
-                                    color: Colors.grey[400],
-                                    fontWeight: FontWeight.w500
-                                )
-                            ),),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(width: screenWidth * 0.025),
+            Container(
+              height: screenHeight * 0.065,
+              width: screenWidth * 0.09,
+              child: CircleAvatar(
+                backgroundImage: post.profileImage != null
+                    ? NetworkImage(post.profileImage!)
+                    : AssetImage('assests/images/placeholder.png') as ImageProvider,
+                onBackgroundImageError: (_, __) {
+                  print("Error loading profile image");
+                },
               ),
             ),
-          );
+            SizedBox(width: screenWidth * 0.025),
+            Text(
+              post.username ?? 'Unknown User',
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Container(
+          height: screenHeight * 0.50,
+          width: screenWidth,
+          child: post.postImage != null
+              ? Image.network(
+            post.postImage!,
+            fit: BoxFit.cover,
+            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+              return Image.asset('assests/images/placeholder.png'); // Path to your placeholder image
+            },
+          )
+              : Image.asset('assests/images/placeholder.png'), // Path to your placeholder image
+        ),
+        Container(
+          height: screenHeight * 0.06,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: screenWidth * 0.01),
+              IconButton(
+                onPressed: () {},
+                icon: FaIcon(FontAwesomeIcons.heart),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: FaIcon(FontAwesomeIcons.comments),
+              ),
+            ],
+          ),
+        ),
+        Row(
+          children: [
+            SizedBox(width: screenWidth * 0.04),
+            Text(
+              'Liked by ${post.likes} others',
+              style: GoogleFonts.lora(
+                textStyle: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w600,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            SizedBox(width: screenWidth * 0.04),
+            Text(
+              post.username ?? 'Unknown User',
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+            SizedBox(width: screenWidth * 0.02),
+            Flexible(
+              child: Text(
+                post.caption ?? '',
+                style: GoogleFonts.lora(
+                  textStyle: TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            SizedBox(width: screenWidth * 0.04),
+            Text(
+              'All comments',
+              style: GoogleFonts.lora(
+                textStyle: TextStyle(
+                  color: Colors.grey[400],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
-
 }

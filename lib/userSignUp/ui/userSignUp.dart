@@ -53,15 +53,17 @@ class _GetmailState extends State<Getmail> {
         child: BlocListener<RegistrationBloc, RegistrationState>(
           listener: (context, state) {
             if (state is RegistrationSuccess) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.message)));
-              Navigator.push(
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
+              Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => Feed()),
+                MaterialPageRoute(builder: (context) => Feed()), // Use pushReplacement to clear the stack
               );
             } else if (state is RegistrationFailure) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.error)));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.error)),
+              );
             }
           },
           child: BlocBuilder<RegistrationBloc, RegistrationState>(

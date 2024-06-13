@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -305,4 +306,26 @@ class optionText extends StatelessWidget {
   }
 }
 
+class ToggleHeartButton extends StatefulWidget {
+  @override
+  _ToggleHeartButtonState createState() => _ToggleHeartButtonState();
+}
 
+class _ToggleHeartButtonState extends State<ToggleHeartButton> {
+  bool isHeartPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          isHeartPressed = !isHeartPressed;
+        });
+      },
+      icon: FaIcon(
+        isHeartPressed ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+        color: isHeartPressed ? Colors.red : Colors.black,
+      ),
+    );
+  }
+}

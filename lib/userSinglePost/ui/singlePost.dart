@@ -7,6 +7,7 @@ import 'package:weave_frontend/userSinglePost/bloc/post_repository.dart';
 import 'package:weave_frontend/userSinglePost/bloc/singlePost_bloc.dart';
 import 'package:weave_frontend/userSinglePost/bloc/singlePost_event.dart';
 import 'package:weave_frontend/userSinglePost/bloc/singlePost_state.dart';
+import 'package:weave_frontend/user_essestials/userEssentials.dart';
 
 class Posts extends StatelessWidget {
   final PostRepository postRepository = PostRepository();
@@ -88,7 +89,7 @@ class PostItem extends StatelessWidget {
           ],
         ),
         Container(
-          height: screenHeight * 0.50,
+          height: screenHeight * 0.58,
           width: screenWidth,
           child: post.postImage != null
               ? Image.network(
@@ -106,10 +107,11 @@ class PostItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(width: screenWidth * 0.01),
-              IconButton(
-                onPressed: () {},
-                icon: FaIcon(FontAwesomeIcons.heart),
-              ),
+              // IconButton(
+              //   onPressed: () {},
+              //   icon: FaIcon(FontAwesomeIcons.heart),
+              // ),
+              ToggleHeartButton(),
               IconButton(
                 onPressed: () {},
                 icon: FaIcon(FontAwesomeIcons.comments),

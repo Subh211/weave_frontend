@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_bloc.dart';
+import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_event.dart';
+import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_repository.dart';
+import 'package:weave_frontend/likes/likeScreen/likeScreen/ui/singleLike.dart';
 import 'package:weave_frontend/models/postModel.dart';
 import 'package:weave_frontend/userSinglePost/bloc/post_repository.dart';
 import 'package:weave_frontend/userSinglePost/bloc/singlePost_bloc.dart';
@@ -11,17 +15,22 @@ import 'package:weave_frontend/user_essestials/userEssentials.dart';
 
 class Posts extends StatelessWidget {
   final PostRepository postRepository = PostRepository();
+  final LikeRepository likeRepository = LikeRepository(); // Create an instance of LikeRepository
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => PostBloc(postRepository)..add(FetchPosts()),
-      child: PostsView(),
+      child: PostsView(likeRepository: likeRepository),
     );
   }
 }
 
 class PostsView extends StatelessWidget {
+  final LikeRepository likeRepository;
+
+  const PostsView({required this.likeRepository});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +43,7 @@ class PostsView extends StatelessWidget {
               itemCount: state.posts.length,
               itemBuilder: (context, index) {
                 final post = state.posts[index];
-                return PostItem(post: post);
+                return PostItem(post: post, likeRepository: likeRepository);
               },
             );
           } else if (state is PostError) {
@@ -51,8 +60,9 @@ class PostsView extends StatelessWidget {
 
 class PostItem extends StatelessWidget {
   final Post post;
+  final LikeRepository likeRepository;
 
-  const PostItem({required this.post});
+  const PostItem({required this.post, required this.likeRepository});
 
   @override
   Widget build(BuildContext context) {
@@ -107,11 +117,7 @@ class PostItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(width: screenWidth * 0.01),
-              // IconButton(
-              //   onPressed: () {},
-              //   icon: FaIcon(FontAwesomeIcons.heart),
-              // ),
-              ToggleHeartButton(postId: post.postId!,friendId: post.friendId!,),
+              ToggleHeartButton(postId: post.postId!, friendId: post.friendId!),
               IconButton(
                 onPressed: () {},
                 icon: FaIcon(FontAwesomeIcons.comments),
@@ -122,13 +128,26 @@ class PostItem extends StatelessWidget {
         Row(
           children: [
             SizedBox(width: screenWidth * 0.04),
-            Text(
-              'Liked by ${post.likes} others',
-              style: GoogleFonts.lora(
-                textStyle: TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600,
-                  fontStyle: FontStyle.italic,
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => LikeBloc(likeRepository)..add(FetchLikes(post.postId!, post.friendId!)),
+                      child: EachlikeScreen(),
+                    ),
+                  ),
+                );
+              },
+              child: Text(
+                'Liked by ${post.likes} others',
+                style: GoogleFonts.lora(
+                  textStyle: TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w600,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
               ),
             ),
@@ -179,7 +198,3 @@ class PostItem extends StatelessWidget {
     );
   }
 }
-
-
-
-

@@ -111,7 +111,7 @@ class PostItem extends StatelessWidget {
               //   onPressed: () {},
               //   icon: FaIcon(FontAwesomeIcons.heart),
               // ),
-              ToggleHeartButton(),
+              ToggleHeartButton(postId: post.postId!,friendId: post.friendId!,),
               IconButton(
                 onPressed: () {},
                 icon: FaIcon(FontAwesomeIcons.comments),
@@ -179,3 +179,7 @@ class PostItem extends StatelessWidget {
     );
   }
 }
+
+
+
+

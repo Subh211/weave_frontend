@@ -1,4 +1,6 @@
 class Post {
+  final String? friendId;
+  final String? postId;
   final String? username;
   final String? profileImage;
   final String? postImage;
@@ -7,6 +9,8 @@ class Post {
   final List<String> comments;
 
   Post({
+    this.friendId,
+    this.postId,
     this.username,
     this.profileImage,
     this.postImage,
@@ -17,6 +21,8 @@ class Post {
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
+      friendId: json['friendId'] as String,
+      postId: json['postId'] as String,
       username: json['name'] as String?,
       profileImage: json['image_secure_url'] as String?,
       postImage: json['picture_secure_url'] as String?,

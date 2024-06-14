@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:dio/dio.dart';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
@@ -306,26 +313,128 @@ class optionText extends StatelessWidget {
   }
 }
 
+// class ToggleHeartButton extends StatefulWidget {
+//   @override
+//   _ToggleHeartButtonState createState() => _ToggleHeartButtonState();
+// }
+//
+// class _ToggleHeartButtonState extends State<ToggleHeartButton> {
+//   bool isHeartPressed = false;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return IconButton(
+//       onPressed: () {
+//         setState(() {
+//           isHeartPressed = !isHeartPressed;
+//         });
+//       },
+//       icon: FaIcon(
+//         isHeartPressed ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+//         color: isHeartPressed ? Colors.red : Colors.black,
+//       ),
+//     );
+//   }
+// }
+
+
+
+
+
+
+
+
 class ToggleHeartButton extends StatefulWidget {
+  final String friendId;
+  final String postId;
+
+  ToggleHeartButton({
+    required this.friendId,
+    required this.postId,
+  });
+
   @override
   _ToggleHeartButtonState createState() => _ToggleHeartButtonState();
 }
 
 class _ToggleHeartButtonState extends State<ToggleHeartButton> {
   bool isHeartPressed = false;
+  final Dio dio = Dio();
+  final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+
+  // Replace with your server URL
+  final String baseUrl = 'https://weave-backend-pyfu.onrender.com/api/v1/post';
+
+  Future<String?> _getStoredToken() async {
+    return await secureStorage.read(key: 'token');
+  }
+
+  Future<void> sendLikeStatus(bool isLiked, String token) async {
+    final String url = '$baseUrl/like/${widget.friendId}';
+    final String query = '?postId=${widget.postId}';
+
+    try {
+      Response response;
+      if (isLiked) {
+        response = await dio.post(
+          '$url$query',
+          options: Options(
+            headers: {
+              HttpHeaders.authorizationHeader: 'Bearer $token',
+            },
+          ),
+        );
+      } else {
+        response = await dio.delete(
+          '$url$query',
+          options: Options(
+            headers: {
+              HttpHeaders.authorizationHeader: 'Bearer $token',
+            },
+          ),
+        );
+      }
+
+      if (response.statusCode == 200) {
+        // Handle success
+        print('Successfully sent like/unlike status');
+      } else {
+        // Handle server error
+        print('Server error: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle network error
+      print('Network error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        setState(() {
-          isHeartPressed = !isHeartPressed;
-        });
+    return FutureBuilder<String?>(
+      future: _getStoredToken(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
+          return Center(child: Text('Token is missing or there was an error'));
+        } else {
+          final token = snapshot.data!;
+          return IconButton(
+            onPressed: () async {
+              setState(() {
+                isHeartPressed = !isHeartPressed;
+              });
+
+              await sendLikeStatus(isHeartPressed, token);
+            },
+            icon: FaIcon(
+              isHeartPressed ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+              color: isHeartPressed ? Colors.red : Colors.black,
+            ),
+          );
+        }
       },
-      icon: FaIcon(
-        isHeartPressed ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
-        color: isHeartPressed ? Colors.red : Colors.black,
-      ),
     );
   }
 }
+

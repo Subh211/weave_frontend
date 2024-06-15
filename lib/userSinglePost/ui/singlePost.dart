@@ -13,6 +13,8 @@ import 'package:weave_frontend/userSinglePost/bloc/singlePost_event.dart';
 import 'package:weave_frontend/userSinglePost/bloc/singlePost_state.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
 
+import '../../comments/singleComment/ui/singleComment.dart';
+
 class Posts extends StatelessWidget {
   final PostRepository postRepository = PostRepository();
   final LikeRepository likeRepository = LikeRepository(); // Create an instance of LikeRepository
@@ -118,10 +120,25 @@ class PostItem extends StatelessWidget {
             children: [
               SizedBox(width: screenWidth * 0.01),
               ToggleHeartButton(postId: post.postId!, friendId: post.friendId!),
-              IconButton(
-                onPressed: () {},
-                icon: FaIcon(FontAwesomeIcons.comments),
-              ),
+              // IconButton(
+              //   onPressed: () {
+              //     Navigator.push(context, MaterialPageRoute(builder: (context) => DoComment()));
+              //   },
+              //   icon: FaIcon(FontAwesomeIcons.comments),
+              // ),
+                IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          DoComment(
+                              postId: post.postId!, friendId: post.friendId!),
+                    ),
+                  );
+                },
+                    icon: FaIcon(FontAwesomeIcons.comments),
+                )
             ],
           ),
         ),
@@ -183,12 +200,15 @@ class PostItem extends StatelessWidget {
         Row(
           children: [
             SizedBox(width: screenWidth * 0.04),
-            Text(
-              'All comments',
-              style: GoogleFonts.lora(
-                textStyle: TextStyle(
-                  color: Colors.grey[400],
-                  fontWeight: FontWeight.w500,
+            InkWell(
+              onTap: () {},
+              child: Text(
+                'All comments',
+                style: GoogleFonts.lora(
+                  textStyle: TextStyle(
+                    color: Colors.grey[400],
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),

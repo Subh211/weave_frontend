@@ -29,7 +29,7 @@ class EachlikeScreen extends StatelessWidget {
                     constraints: BoxConstraints(
                       minHeight: MediaQuery.of(context).size.height * 0.06,
                     ),
-                    color: Colors.white,
+                    color: Colors.transparent,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

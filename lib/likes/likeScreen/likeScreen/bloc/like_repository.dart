@@ -7,6 +7,7 @@ class LikeRepository {
     final response = await http.get(Uri.parse('https://weave-backend-pyfu.onrender.com/api/v1/post/alllikes/$friendId?postId=$postId'));
 
     if (response.statusCode == 200) {
+      print("resss ${response.body}");
       List<dynamic> data = json.decode(response.body)['data'];
       return data.map((json) => Like.fromJson(json)).toList();
     } else {

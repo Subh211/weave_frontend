@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
@@ -13,34 +14,50 @@ class DeleteUserBloc extends Bloc<DeleteUserEvent, DeleteUserState> {
   final String baseUrl;
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
   final CookieJar cookieJar = CookieJar();
+  final String token;
 
-  DeleteUserBloc(this.baseUrl) : super(DeleteUserInitial()) {
+
+  DeleteUserBloc(this.baseUrl,this.token) : super(DeleteUserInitial()) {
     on<DeleteUserButtonPressed>(_onDeleteUser);
+  }
+
+  Future<String?> _getStoredToken() async {
+    final storedToken = await secureStorage.read(key: 'token');
+    return storedToken;
   }
 
   Future<void> _onDeleteUser(
       DeleteUserButtonPressed event, Emitter<DeleteUserState> emit) async {
     emit(DeleteUserLoading());
+
+    final storedToken = await _getStoredToken();
+    if (storedToken == null) {
+      emit(DeleteUserFailure('Token is missing', error: 'Token is missing'));
+      return;
+    }
+
     try {
       final dio = Dio();
 
-      // Create FormData
-      FormData formData = FormData.fromMap({
+      final data = {
         'password': event.password,
-      });
+      };
 
-      final response = await dio.post(
+      final response = await dio.delete(
         'https://weave-backend-pyfu.onrender.com/api/v1/user/delete',
-        data: formData,
+        data: data,
         options: Options(
           headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json',
+            HttpHeaders.authorizationHeader: 'Bearer $storedToken'
           },
         ),
       );
 
       if (response.statusCode == 200) {
         final responseData = response.data;
+
+        await secureStorage.deleteAll();
 
         emit(DeleteUserSuccess(responseData['message']));
       } else {

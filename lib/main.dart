@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weave_frontend/comments/singleComment/ui/singleComment.dart';
 import 'package:weave_frontend/optionScreen/ui/optionScreen.dart';
 import 'package:weave_frontend/splashScreen/splashScreen.dart';
+import 'package:weave_frontend/userAddPost/ui/addPost.dart';
 import 'package:weave_frontend/userFeed/ui/feed.dart';
 import 'package:weave_frontend/userLogIn/ui/userLogIn.dart';
 import 'package:weave_frontend/userLogOut/ui/userSignOut.dart';

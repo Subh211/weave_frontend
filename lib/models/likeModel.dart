@@ -10,7 +10,7 @@ class Like {
     return Like(
       userId: json['userId'] ?? '',
       userName: json['userName'] ?? 'Unknown User',
-      userProfileImage: json['userProfileImage'] ?? 'path/to/default/image.png',
+      userProfileImage: json['userImage'] ?? 'assests/images/placeholder.png',
       isLiked: json['isLiked'] ?? false,
     );
   }

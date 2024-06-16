@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:weave_frontend/models/postModel.dart';
 import 'package:weave_frontend/userFeed/ui/feed.dart';
 import 'package:weave_frontend/userSignUp/ui/userSignUp.dart';
+import 'package:weave_frontend/userSinglePost/ui/singlePost.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -26,9 +28,12 @@ class _SplashScreenState extends State<SplashScreen> {
     String? token = await secureStorage.read(key: 'token');
     if (token != null) {
       // Token is present, navigate to Feed
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Feed()),
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => Feed()),
+      // );
+      Navigator.push(context,
+            MaterialPageRoute(builder: (context) => Feed())
       );
     } else {
       // No token, navigate to Getmail (Sign Up)

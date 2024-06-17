@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_bloc.dart';
+import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_event.dart';
+import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_repository.dart';
+import 'package:weave_frontend/comments/commentScreen/ui/commentScreen.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_bloc.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_event.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_repository.dart';
@@ -17,21 +21,27 @@ import '../../comments/singleComment/ui/singleComment.dart';
 
 class Posts extends StatelessWidget {
   final PostRepository postRepository = PostRepository();
-  final LikeRepository likeRepository = LikeRepository(); // Create an instance of LikeRepository
+  final LikeRepository likeRepository = LikeRepository();// Create an instance of LikeRepository
+  final CommentScreenRepository commentScreenRepository = CommentScreenRepository();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => PostBloc(postRepository)..add(FetchPosts()),
-      child: PostsView(likeRepository: likeRepository),
+      child: PostsView(likeRepository: likeRepository, commentScreenRepository: commentScreenRepository,),
     );
   }
 }
 
 class PostsView extends StatelessWidget {
   final LikeRepository likeRepository;
+  final CommentScreenRepository commentScreenRepository;
 
-  const PostsView({required this.likeRepository});
+
+  const PostsView({
+    required this.likeRepository,
+    required this.commentScreenRepository,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +55,7 @@ class PostsView extends StatelessWidget {
               itemCount: state.posts.length,
               itemBuilder: (context, index) {
                 final post = state.posts[index];
-                return PostItem(post: post, likeRepository: likeRepository);
+                return PostItem(post: post, likeRepository: likeRepository, commentScreenRepository: commentScreenRepository,);
               },
             );
           } else if (state is PostError) {
@@ -63,8 +73,14 @@ class PostsView extends StatelessWidget {
 class PostItem extends StatelessWidget {
   final Post post;
   final LikeRepository likeRepository;
+  final CommentScreenRepository commentScreenRepository;
 
-  const PostItem({required this.post, required this.likeRepository});
+
+  const PostItem({
+    required this.post,
+    required this.likeRepository,
+    required this.commentScreenRepository,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +217,17 @@ class PostItem extends StatelessWidget {
           children: [
             SizedBox(width: screenWidth * 0.04),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => CommentScreenBloc(commentScreenRepository)..add(FetchComments(post.postId!, post.friendId!)),
+                      child: CommentScreen(),
+                    ),
+                  ),
+                );
+              },
               child: Text(
                 'All comments',
                 style: GoogleFonts.lora(

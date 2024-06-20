@@ -6,6 +6,10 @@ import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_bloc.da
 import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_event.dart';
 import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_repository.dart';
 import 'package:weave_frontend/comments/commentScreen/ui/commentScreen.dart';
+import 'package:weave_frontend/friendProfile/bloc/friendProfile_bloc.dart';
+import 'package:weave_frontend/friendProfile/bloc/friendProfile_event.dart';
+import 'package:weave_frontend/friendProfile/bloc/friendProfile_repository.dart';
+import 'package:weave_frontend/friendProfile/ui/friendProfile.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_bloc.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_event.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_repository.dart';
@@ -23,12 +27,14 @@ class Posts extends StatelessWidget {
   final PostRepository postRepository = PostRepository();
   final LikeRepository likeRepository = LikeRepository();// Create an instance of LikeRepository
   final CommentScreenRepository commentScreenRepository = CommentScreenRepository();
+  final GetFriendProfileRepository getFriendProfileRepository = GetFriendProfileRepository();
+
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => PostBloc(postRepository)..add(FetchPosts()),
-      child: PostsView(likeRepository: likeRepository, commentScreenRepository: commentScreenRepository,),
+      child: PostsView(likeRepository: likeRepository, commentScreenRepository: commentScreenRepository, getFriendProfileRepository: getFriendProfileRepository),
     );
   }
 }
@@ -36,11 +42,13 @@ class Posts extends StatelessWidget {
 class PostsView extends StatelessWidget {
   final LikeRepository likeRepository;
   final CommentScreenRepository commentScreenRepository;
+  final GetFriendProfileRepository getFriendProfileRepository;
 
 
   const PostsView({
     required this.likeRepository,
     required this.commentScreenRepository,
+    required this.getFriendProfileRepository
   });
 
   @override
@@ -55,7 +63,7 @@ class PostsView extends StatelessWidget {
               itemCount: state.posts.length,
               itemBuilder: (context, index) {
                 final post = state.posts[index];
-                return PostItem(post: post, likeRepository: likeRepository, commentScreenRepository: commentScreenRepository,);
+                return PostItem(post: post, likeRepository: likeRepository, commentScreenRepository: commentScreenRepository, getFriendProfileRepository: getFriendProfileRepository);
               },
             );
           } else if (state is PostError) {
@@ -74,12 +82,14 @@ class PostItem extends StatelessWidget {
   final Post post;
   final LikeRepository likeRepository;
   final CommentScreenRepository commentScreenRepository;
+  final GetFriendProfileRepository getFriendProfileRepository;
 
 
   const PostItem({
     required this.post,
     required this.likeRepository,
     required this.commentScreenRepository,
+    required this.getFriendProfileRepository,
   });
 
   @override
@@ -88,33 +98,56 @@ class PostItem extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(width: screenWidth * 0.025),
-            Container(
-              height: screenHeight * 0.065,
-              width: screenWidth * 0.09,
-              child: CircleAvatar(
-                backgroundImage: post.profileImage != null
-                    ? NetworkImage(post.profileImage!)
-                    : AssetImage('assests/images/placeholder.png') as ImageProvider,
-                onBackgroundImageError: (_, __) {
-                  print("Error loading profile image");
-                },
-              ),
+        InkWell(
+          onTap: () {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => BlocProvider(
+          //         create: (context) => GetFriendProfileBloc(getFriendProfileRepository)..add(FetchFriendProfileEvent(friendId : post.friendId!)),
+          //         child: FriendProfile(),
+          //       ),
+          //     ),
+          //   );
+          // },
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => GetFriendProfileBloc(getFriendProfileRepository)..add(FetchFriendProfileEvent(friendId: post.friendId!)),
+              child: FriendProfile(friendId: post.friendId!),
             ),
-            SizedBox(width: screenWidth * 0.025),
-            Text(
-              post.username ?? 'Unknown User',
-              style: GoogleFonts.poppins(
-                textStyle: TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600,
+          ),
+        );
+      },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: screenWidth * 0.025),
+              Container(
+                height: screenHeight * 0.065,
+                width: screenWidth * 0.09,
+                child: CircleAvatar(
+                  backgroundImage: post.profileImage != null
+                      ? NetworkImage(post.profileImage!)
+                      : AssetImage('assests/images/placeholder.png') as ImageProvider,
+                  onBackgroundImageError: (_, __) {
+                    print("Error loading profile image");
+                  },
                 ),
               ),
-            ),
-          ],
+              SizedBox(width: screenWidth * 0.025),
+              Text(
+                post.username ?? 'Unknown User',
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
         Container(
           height: screenHeight * 0.58,

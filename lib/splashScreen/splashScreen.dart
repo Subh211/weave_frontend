@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:weave_frontend/models/postModel.dart';
 import 'package:weave_frontend/userFeed/ui/feed.dart';
+import 'package:weave_frontend/userProfile/bloc/userProfile_bloc.dart';
+import 'package:weave_frontend/userProfile/bloc/userProfile_repository.dart';
 import 'package:weave_frontend/userSignUp/ui/userSignUp.dart';
 import 'package:weave_frontend/userSinglePost/ui/singlePost.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
@@ -27,13 +30,29 @@ class _SplashScreenState extends State<SplashScreen> {
     // Check login status
     String? token = await secureStorage.read(key: 'token');
     if (token != null) {
-      // Token is present, navigate to Feed
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => Feed()),
+      // Navigator.push(context,
+      //       MaterialPageRoute(builder: (context) => Feed())
       // );
-      Navigator.push(context,
-            MaterialPageRoute(builder: (context) => Feed())
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => FutureBuilder<String?>(
+          future: FlutterSecureStorage().read(key: 'token'),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            } else {
+              final token = snapshot.data ?? '';
+              final getUserProfileRepository = GetUserProfileRepository();
+              return BlocProvider(
+                create: (context) => GetUserProfileBloc(getUserProfileRepository, token),
+                child: Feed(),
+              );
+            }
+          },
+        )),
       );
     } else {
       // No token, navigate to Getmail (Sign Up)

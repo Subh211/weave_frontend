@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:weave_frontend/userFeed/ui/feed.dart';
 import 'package:weave_frontend/userLogIn/ui/userLogIn.dart';
+import 'package:weave_frontend/userProfile/bloc/userProfile_bloc.dart';
+import 'package:weave_frontend/userProfile/bloc/userProfile_repository.dart';
 import 'package:weave_frontend/userSignUp/bloc/registration_event.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
 import '../bloc/registration_bloc.dart';
@@ -55,10 +58,31 @@ class _GetmailState extends State<Getmail> {
             if (state is RegistrationSuccess) {
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text(state.message)));
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => Feed()),
+              // );
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Feed()),
+                MaterialPageRoute(builder: (context) => FutureBuilder<String?>(
+                  future: FlutterSecureStorage().read(key: 'token'),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Scaffold(
+                        body: Center(child: CircularProgressIndicator()),
+                      );
+                    } else {
+                      final token = snapshot.data ?? '';
+                      final getUserProfileRepository = GetUserProfileRepository();
+                      return BlocProvider(
+                        create: (context) => GetUserProfileBloc(getUserProfileRepository, token),
+                        child: Feed(),
+                      );
+                    }
+                  },
+                )),
               );
+
             } else if (state is RegistrationFailure) {
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text(state.error)));

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_bloc.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_event.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_state.dart';
@@ -49,6 +50,7 @@ class _friendProfileState extends State<FriendProfile> {
           var profile = state.profile;
           var user = profile.user;
           var posts = profile.posts.posts; // Assuming posts is a list of Post objects
+          var isFriend = profile.isFriend;
 
           double screenHeight = MediaQuery.of(context).size.height;
           double screenWidth = MediaQuery.of(context).size.width;
@@ -56,6 +58,16 @@ class _friendProfileState extends State<FriendProfile> {
 
 
           return Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Weave',
+                style: GoogleFonts.clickerScript(
+                  fontWeight: FontWeight.w600,
+                  color: Color.fromRGBO(165, 179, 158, 1),
+                  fontSize: AppBar().preferredSize.height,
+                ),
+              ),
+            ),
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,15 +125,18 @@ class _friendProfileState extends State<FriendProfile> {
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   Center(
-                    child: CustomTextButton(
-                      onPressed: () {},
-                      showPencilIcon: true,
+                    child: CustomTextButtonForFriend(
+                      onPressed: () {
+                        print('isFriend $isFriend');
+                      },
+                      showPencilIcon: false,
                       showBorder: false,
                       horizontalPadding: screenWidth * 0.26,
-                      buttonText: 'Edit Profile',
                       screenHeight: screenHeight,
                       buttonHeight: screenHeight * 0.06,
                       fontSize: screenHeight * 0.022,
+                      isFriend: isFriend,
+                      friendId: user.id,
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.02),

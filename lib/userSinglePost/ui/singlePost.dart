@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_bloc.dart';
@@ -15,11 +16,15 @@ import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_event.dart'
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_repository.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/ui/singleLike.dart';
 import 'package:weave_frontend/models/postModel.dart';
+import 'package:weave_frontend/userProfile/bloc/userProfile_bloc.dart';
+import 'package:weave_frontend/userProfile/ui/profile.dart';
 import 'package:weave_frontend/userSinglePost/bloc/post_repository.dart';
 import 'package:weave_frontend/userSinglePost/bloc/singlePost_bloc.dart';
 import 'package:weave_frontend/userSinglePost/bloc/singlePost_event.dart';
 import 'package:weave_frontend/userSinglePost/bloc/singlePost_state.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
+import 'package:weave_frontend/userProfile/bloc/userProfile_repository.dart';
+
 
 import '../../comments/singleComment/ui/singleComment.dart';
 
@@ -28,13 +33,19 @@ class Posts extends StatelessWidget {
   final LikeRepository likeRepository = LikeRepository();// Create an instance of LikeRepository
   final CommentScreenRepository commentScreenRepository = CommentScreenRepository();
   final GetFriendProfileRepository getFriendProfileRepository = GetFriendProfileRepository();
+  final GetUserProfileRepository getUserProfileRepository = GetUserProfileRepository();
+
 
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => PostBloc(postRepository)..add(FetchPosts()),
-      child: PostsView(likeRepository: likeRepository, commentScreenRepository: commentScreenRepository, getFriendProfileRepository: getFriendProfileRepository),
+      child: PostsView(likeRepository: likeRepository,
+          commentScreenRepository: commentScreenRepository,
+          getFriendProfileRepository: getFriendProfileRepository,
+          getUserProfileRepository: getUserProfileRepository,
+      ),
     );
   }
 }
@@ -43,12 +54,14 @@ class PostsView extends StatelessWidget {
   final LikeRepository likeRepository;
   final CommentScreenRepository commentScreenRepository;
   final GetFriendProfileRepository getFriendProfileRepository;
+  final GetUserProfileRepository getUserProfileRepository;
 
 
   const PostsView({
     required this.likeRepository,
     required this.commentScreenRepository,
-    required this.getFriendProfileRepository
+    required this.getFriendProfileRepository,
+    required this.getUserProfileRepository,
   });
 
   @override
@@ -62,8 +75,16 @@ class PostsView extends StatelessWidget {
             return ListView.builder(
               itemCount: state.posts.length,
               itemBuilder: (context, index) {
+                final usersName = state.username;
                 final post = state.posts[index];
-                return PostItem(post: post, likeRepository: likeRepository, commentScreenRepository: commentScreenRepository, getFriendProfileRepository: getFriendProfileRepository);
+                return PostItem(
+                    username: usersName,
+                    post: post,
+                    likeRepository: likeRepository,
+                    commentScreenRepository: commentScreenRepository,
+                    getFriendProfileRepository: getFriendProfileRepository,
+                    getUserProfileRepository: getUserProfileRepository,
+                );
               },
             );
           } else if (state is PostError) {
@@ -83,6 +104,8 @@ class PostItem extends StatelessWidget {
   final LikeRepository likeRepository;
   final CommentScreenRepository commentScreenRepository;
   final GetFriendProfileRepository getFriendProfileRepository;
+  final String username;
+  final GetUserProfileRepository getUserProfileRepository;
 
 
   const PostItem({
@@ -90,7 +113,13 @@ class PostItem extends StatelessWidget {
     required this.likeRepository,
     required this.commentScreenRepository,
     required this.getFriendProfileRepository,
+    required this.getUserProfileRepository,
+    required this.username,
   });
+
+  Future<String?> _retrieveToken() async {
+    return await FlutterSecureStorage().read(key: 'token');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,26 +128,31 @@ class PostItem extends StatelessWidget {
     return Column(
       children: [
         InkWell(
-          onTap: () {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => BlocProvider(
-          //         create: (context) => GetFriendProfileBloc(getFriendProfileRepository)..add(FetchFriendProfileEvent(friendId : post.friendId!)),
-          //         child: FriendProfile(),
-          //       ),
-          //     ),
-          //   );
-          // },
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => GetFriendProfileBloc(getFriendProfileRepository)..add(FetchFriendProfileEvent(friendId: post.friendId!)),
-              child: FriendProfile(friendId: post.friendId!),
-            ),
-          ),
-        );
+          onTap: () async {
+            print('post.username ${post.username} & username $username');
+            final token = await _retrieveToken();
+          if (post.username! == username) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => GetUserProfileBloc(getUserProfileRepository,token!),
+                  child: OwnProfile(), // Replace with your Profile widget
+                ),
+              ),
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => GetFriendProfileBloc(getFriendProfileRepository)..add(FetchFriendProfileEvent(friendId: post.friendId!)),
+                  child: FriendProfile(friendId: post.friendId!),
+                ),
+              ),
+            );
+          };
+
       },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,

@@ -8,8 +8,9 @@ class PostLoading extends PostState {}
 
 class PostLoaded extends PostState {
   final List<Post> posts;
+  final String username; // Add this line
 
-  PostLoaded(this.posts);
+  PostLoaded(this.posts,this.username);
 }
 
 class PostError extends PostState {

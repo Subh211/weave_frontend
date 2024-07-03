@@ -1,4 +1,3 @@
-// comment_state.dart
 import 'package:equatable/equatable.dart';
 
 abstract class CommentState extends Equatable {

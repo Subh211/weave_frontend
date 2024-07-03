@@ -1,6 +1,6 @@
-// like_state.dart
 import 'package:equatable/equatable.dart';
 import 'package:weave_frontend/models/commentModel.dart';
+
 abstract class CommentScreenState extends Equatable {
   const CommentScreenState();
 

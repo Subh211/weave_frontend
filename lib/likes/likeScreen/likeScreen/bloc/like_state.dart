@@ -1,4 +1,3 @@
-// like_state.dart
 import 'package:equatable/equatable.dart';
 import 'package:weave_frontend/models/likeModel.dart';
 

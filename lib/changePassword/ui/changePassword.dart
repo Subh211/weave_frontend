@@ -5,7 +5,6 @@ import 'package:weave_frontend/changePassword/bloc/changePassword_bloc.dart';
 import 'package:weave_frontend/changePassword/bloc/changePassword_event.dart';
 import 'package:weave_frontend/changePassword/bloc/changePassword_state.dart';
 import 'package:weave_frontend/userFeed/ui/feed.dart';
-import 'package:weave_frontend/userLogIn/bloc/signIn_bloc.dart';
 import 'package:weave_frontend/userSignUp/ui/userSignUp.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
 
@@ -107,7 +106,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                                   Flexible(
                                                     flex: 6,
                                                     child: headerText(
-                                                      textSize: screenHeight * 0.029,
+                                                      textSize: screenHeight * 0.024,
                                                       text: 'C h a n g e  P a s s w o r d',
                                                       screenHeight: screenHeight,
                                                     ),
@@ -119,6 +118,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                                     flex: 3,
                                                     child: textFields(
                                                       controller: oldPasswordController,
+                                                      star: true,
                                                       screenHeight: screenHeight,
                                                       screenWidth: screenWidth,
                                                       hintText: 'old password',

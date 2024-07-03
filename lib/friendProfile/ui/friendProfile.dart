@@ -5,18 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_bloc.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_event.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_state.dart';
-import 'package:weave_frontend/userProfile/bloc/userProfile_bloc.dart';
-import 'package:weave_frontend/userProfile/bloc/userProfile_event.dart';
-import 'package:weave_frontend/userProfile/bloc/userProfile_state.dart';
-import 'package:weave_frontend/userSinglePost/ui/singlePost.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
 
-import '../../models/profileModel.dart';
 
 
 class FriendProfile extends StatefulWidget {
-  //final Profile profile;
-  final String friendId; // Add friendId parameter
+  final String friendId;
 
 
   const FriendProfile({
@@ -31,16 +25,29 @@ class FriendProfile extends StatefulWidget {
   }
 }
 
-
 class _friendProfileState extends State<FriendProfile> {
-  int selectedIndex = 0; // State to track the selected icon index
+  int selectedIndex = 0;
+  late ValueNotifier<int> followersNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    followersNotifier = ValueNotifier<int>(0);
+  }
+
+  @override
+  void dispose() {
+    followersNotifier.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GetFriendProfileBloc, GetFriendProfileState>(
       builder: (context, state) {
         if (state is FriendProfileInitial) {
-          BlocProvider.of<GetFriendProfileBloc>(context).add(FetchFriendProfileEvent(friendId: widget.friendId));
+          BlocProvider.of<GetFriendProfileBloc>(context)
+              .add(FetchFriendProfileEvent(friendId: widget.friendId));
           return Center(child: CircularProgressIndicator());
         } else if (state is FriendProfileLoading) {
           return Scaffold(
@@ -49,13 +56,14 @@ class _friendProfileState extends State<FriendProfile> {
         } else if (state is FriendProfileLoaded) {
           var profile = state.profile;
           var user = profile.user;
-          var posts = profile.posts.posts; // Assuming posts is a list of Post objects
+          var posts = profile.posts.posts;
           var isFriend = profile.isFriend;
+
+          followersNotifier.value = profile.friendDetails.followers.length;
 
           double screenHeight = MediaQuery.of(context).size.height;
           double screenWidth = MediaQuery.of(context).size.width;
           double iconSize = screenHeight * 0.03;
-
 
           return Scaffold(
             appBar: AppBar(
@@ -104,9 +112,14 @@ class _friendProfileState extends State<FriendProfile> {
                           SizedBox(
                             width: screenWidth * 0.05,
                           ),
-                          Text(
-                            '${profile.friendDetails.followers!.length}  \n followers ',
-                            textAlign: TextAlign.center,
+                          ValueListenableBuilder<int>(
+                            valueListenable: followersNotifier,
+                            builder: (context, followersCount, child) {
+                              return Text(
+                                '$followersCount  \n followers ',
+                                textAlign: TextAlign.center,
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -143,8 +156,20 @@ class _friendProfileState extends State<FriendProfile> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.045),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        // IconButton(
+                        //   onPressed: () {
+                        //     setState(() {
+                        //       selectedIndex = 0;
+                        //     });
+                        //   },
+                        //   icon: FaIcon(
+                        //     FontAwesomeIcons.tableCells,
+                        //     size: iconSize,
+                        //     color: selectedIndex == 0 ? Colors.black : Colors.grey,
+                        //   ),
+                        // ),
                         IconButton(
                           onPressed: () {
                             setState(() {
@@ -152,35 +177,23 @@ class _friendProfileState extends State<FriendProfile> {
                             });
                           },
                           icon: FaIcon(
-                            FontAwesomeIcons.tableCells,
+                            FontAwesomeIcons.squarePlus,
                             size: iconSize,
                             color: selectedIndex == 0 ? Colors.black : Colors.grey,
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedIndex = 1;
-                            });
-                          },
-                          icon: FaIcon(
-                            FontAwesomeIcons.squarePlus,
-                            size: iconSize,
-                            color: selectedIndex == 1 ? Colors.black : Colors.grey,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedIndex = 2;
-                            });
-                          },
-                          icon: FaIcon(
-                            FontAwesomeIcons.bookmark,
-                            size: iconSize,
-                            color: selectedIndex == 2 ? Colors.black : Colors.grey,
-                          ),
-                        ),
+                        // IconButton(
+                        //   onPressed: () {
+                        //     setState(() {
+                        //       selectedIndex = 2;
+                        //     });
+                        //   },
+                        //   icon: FaIcon(
+                        //     FontAwesomeIcons.bookmark,
+                        //     size: iconSize,
+                        //     color: selectedIndex == 2 ? Colors.black : Colors.grey,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -196,12 +209,6 @@ class _friendProfileState extends State<FriendProfile> {
                     itemBuilder: (context, index) {
                       var post = posts[index];
                       return InkWell(
-// onTap: () {
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(builder: (context) => SinglePost(post: post)),
-//   );
-// },
                         child: Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(

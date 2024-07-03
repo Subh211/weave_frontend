@@ -5,7 +5,6 @@ import 'package:weave_frontend/userLogIn/ui/userLogIn.dart';
 import 'package:weave_frontend/userLogOut/bloc/signOut_bloc.dart';
 import 'package:weave_frontend/userLogOut/bloc/signOut_event.dart';
 import 'package:weave_frontend/userLogOut/bloc/signOut_state.dart';
-import 'package:weave_frontend/userSignUp/ui/userSignUp.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
 
 class SignOut extends StatefulWidget {
@@ -160,4 +159,5 @@ class _SignOutState extends State<SignOut> {
     );
   }
 }
+
 

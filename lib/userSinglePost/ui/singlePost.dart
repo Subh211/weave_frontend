@@ -107,15 +107,16 @@ class PostItem extends StatelessWidget {
   final String username;
   final GetUserProfileRepository getUserProfileRepository;
 
+  final ValueNotifier<int> likesNotifier;
 
-  const PostItem({
+  PostItem({
     required this.post,
     required this.likeRepository,
     required this.commentScreenRepository,
     required this.getFriendProfileRepository,
-    required this.getUserProfileRepository,
     required this.username,
-  });
+    required this.getUserProfileRepository,
+  }) : likesNotifier = ValueNotifier(post.likes ?? 0);
 
   Future<String?> _retrieveToken() async {
     return await FlutterSecureStorage().read(key: 'token');
@@ -125,35 +126,35 @@ class PostItem extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+
     return Column(
       children: [
         InkWell(
           onTap: () async {
-            print('post.username ${post.username} & username $username');
             final token = await _retrieveToken();
-          if (post.username! == username) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BlocProvider(
-                  create: (context) => GetUserProfileBloc(getUserProfileRepository,token!),
-                  child: OwnProfile(), // Replace with your Profile widget
+            if (post.username! == username) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => GetUserProfileBloc(getUserProfileRepository, token!),
+                    child: OwnProfile(),
+                  ),
                 ),
-              ),
-            );
-          } else {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BlocProvider(
-                  create: (context) => GetFriendProfileBloc(getFriendProfileRepository)..add(FetchFriendProfileEvent(friendId: post.friendId!)),
-                  child: FriendProfile(friendId: post.friendId!),
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => GetFriendProfileBloc(getFriendProfileRepository)
+                      ..add(FetchFriendProfileEvent(friendId: post.friendId!)),
+                    child: FriendProfile(friendId: post.friendId!),
+                  ),
                 ),
-              ),
-            );
-          };
-
-      },
+              );
+            }
+          },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -164,7 +165,7 @@ class PostItem extends StatelessWidget {
                 child: CircleAvatar(
                   backgroundImage: post.profileImage != null
                       ? NetworkImage(post.profileImage!)
-                      : AssetImage('assests/images/placeholder.png') as ImageProvider,
+                      : AssetImage('assets/images/placeholder.png') as ImageProvider,
                   onBackgroundImageError: (_, __) {
                     print("Error loading profile image");
                   },
@@ -191,10 +192,10 @@ class PostItem extends StatelessWidget {
             post.postImage!,
             fit: BoxFit.cover,
             errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-              return Image.asset('assests/images/placeholder.png'); // Path to your placeholder image
+              return Image.asset('assets/images/placeholder.png');
             },
           )
-              : Image.asset('assests/images/placeholder.png'), // Path to your placeholder image
+              : Image.asset('assets/images/placeholder.png'),
         ),
         Container(
           height: screenHeight * 0.06,
@@ -202,56 +203,67 @@ class PostItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(width: screenWidth * 0.01),
-              ToggleHeartButton(postId: post.postId!, friendId: post.friendId!),
-              // IconButton(
-              //   onPressed: () {
-              //     Navigator.push(context, MaterialPageRoute(builder: (context) => DoComment()));
-              //   },
-              //   icon: FaIcon(FontAwesomeIcons.comments),
-              // ),
-                IconButton(
+              ToggleHeartButton(
+                postId: post.postId!,
+                friendId: post.friendId!,
+                onLikeStatusChanged: (isLiked) {
+                  if (isLiked) {
+                    likesNotifier.value += 1;
+                  } else {
+                    likesNotifier.value -= 1;
+                  }
+                },
+              ),
+              IconButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          DoComment(
-                              postId: post.postId!, friendId: post.friendId!),
+                      builder: (context) => DoComment(
+                        postId: post.postId!,
+                        friendId: post.friendId!,
+                      ),
                     ),
                   );
                 },
-                    icon: FaIcon(FontAwesomeIcons.comments),
-                )
+                icon: FaIcon(FontAwesomeIcons.comments),
+              ),
             ],
           ),
         ),
-        Row(
-          children: [
-            SizedBox(width: screenWidth * 0.04),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (context) => LikeBloc(likeRepository)..add(FetchLikes(post.postId!, post.friendId!)),
-                      child: EachlikeScreen(),
+        ValueListenableBuilder<int>(
+          valueListenable: likesNotifier,
+          builder: (context, likesCount, child) {
+            return Row(
+              children: [
+                SizedBox(width: screenWidth * 0.04),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (context) => LikeBloc(likeRepository)
+                            ..add(FetchLikes(post.postId!, post.friendId!)),
+                          child: EachlikeScreen(),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Liked by $likesCount others',
+                    style: GoogleFonts.lora(
+                      textStyle: TextStyle(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
                   ),
-                );
-              },
-              child: Text(
-                'Liked by ${post.likes} others',
-                style: GoogleFonts.lora(
-                  textStyle: TextStyle(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.w600,
-                    fontStyle: FontStyle.italic,
-                  ),
                 ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         ),
         Row(
           children: [
@@ -289,7 +301,8 @@ class PostItem extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => BlocProvider(
-                      create: (context) => CommentScreenBloc(commentScreenRepository)..add(FetchComments(post.postId!, post.friendId!)),
+                      create: (context) => CommentScreenBloc(commentScreenRepository)
+                        ..add(FetchComments(post.postId!, post.friendId!)),
                       child: CommentScreen(),
                     ),
                   ),
@@ -311,3 +324,4 @@ class PostItem extends StatelessWidget {
     );
   }
 }
+

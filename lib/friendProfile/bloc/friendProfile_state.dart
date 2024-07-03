@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:weave_frontend/models/profileModel.dart';
 

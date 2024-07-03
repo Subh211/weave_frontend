@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_bloc.dart';
 import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_state.dart';
-import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_bloc.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_state.dart';
 
 class CommentScreen extends StatelessWidget {

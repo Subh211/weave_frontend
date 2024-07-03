@@ -123,7 +123,7 @@ class _UpdateUserState extends State<UpdateUser> {
                                                flex: 4,
                                                child: headerText(
                                                  text: 'U p d a t e  A c c o u n t',
-                                                 textSize: screenHeight * 0.028,
+                                                 textSize: screenHeight * 0.027,
                                                  screenHeight: screenHeight,
                                                ),
                                              ),
@@ -138,15 +138,15 @@ class _UpdateUserState extends State<UpdateUser> {
                                                ),
                                              ),
                                              Flexible(flex: 1, child: Container()),
-                                             Flexible(
-                                               flex: 2,
-                                               child: textFields(
-                                                 controller: bioController,
-                                                 screenHeight: screenHeight,
-                                                 screenWidth: screenWidth,
-                                                 hintText: 'bio',
-                                               ),
-                                             ),
+                                             // Flexible(
+                                             //   flex: 2,
+                                             //   child: textFields(
+                                             //     controller: bioController,
+                                             //     screenHeight: screenHeight,
+                                             //     screenWidth: screenWidth,
+                                             //     hintText: 'bio',
+                                             //   ),
+                                             // ),
                                              Flexible(flex: 1, child: Container()),
                                              Flexible(
                                                flex: 5,

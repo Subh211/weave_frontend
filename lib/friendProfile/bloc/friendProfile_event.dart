@@ -1,8 +1,5 @@
-
-
 import 'package:equatable/equatable.dart';
 
-//abstract class GetFriendProfileEvent  {}
 abstract class GetFriendProfileEvent extends Equatable {
   const GetFriendProfileEvent();
 

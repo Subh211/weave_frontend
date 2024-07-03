@@ -39,8 +39,9 @@ class SignOutBloc extends Bloc<SignOutEvent, SignOutState> {
     try {
       final dio = Dio();
 
+      print('inside');
 
-      final response = await dio.get(
+      final response = await dio.post(
         'https://weave-backend-pyfu.onrender.com/api/v1/user/logout',
         options: Options(
           headers: {
@@ -49,6 +50,7 @@ class SignOutBloc extends Bloc<SignOutEvent, SignOutState> {
           },
         ),
       );
+      print('hiii ${response}');
 
       if (response.statusCode == 200) {
         final responseData = response.data;
@@ -59,10 +61,12 @@ class SignOutBloc extends Bloc<SignOutEvent, SignOutState> {
         emit(SignOutSuccess(responseData['message']));
       } else {
         final errorMessage = response.data['message'] ?? 'Failed to sign out. Please try again.';
+        print('${response.data['message']}');
         emit(SignOutFailure(errorMessage, error: 'Failed to sign out. Please try again.'));
       }
     } catch (error) {
       if (error is DioError) {
+        print('hiii ${error.response?.data['message']}');
         final errorMessage = error.response?.data['message'] ?? 'An error occurred. Please try again.';
         emit(SignOutFailure(errorMessage, error: 'An error occurred. Please try again.'));
       } else {
@@ -71,3 +75,4 @@ class SignOutBloc extends Bloc<SignOutEvent, SignOutState> {
     }
   }
 }
+

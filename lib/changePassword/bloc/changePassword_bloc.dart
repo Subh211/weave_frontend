@@ -20,11 +20,6 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> 
     on<ChangePasswordButtonPressed>(_onChangePassword);
   }
 
-  // // Method to get the stored token
-  // Future<String?> _getStoredToken() async {
-  //   return await secureStorage.read(key: 'token');
-  // }
-
   Future<String?> _getStoredToken() async {
     final storedToken = await secureStorage.read(key: 'token');
     print('Stored Token: $storedToken'); // Add this line

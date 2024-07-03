@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:weave_frontend/userLogIn/bloc/signIn_event.dart';
 import 'package:weave_frontend/userLogIn/bloc/signIn_state.dart';
@@ -16,11 +14,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   SignInBloc(this.baseUrl) : super(SignInInitial()) {
     on<SignInButtonPressed>(_onSignInUser);
   }
-
-  // Future<String?> _getStoredToken() async {
-  //   // Read the token from secure storage
-  //   return await secureStorage.read(key: 'token');
-  // }
 
   Future<void> _onSignInUser(
       SignInButtonPressed event, Emitter<SignInState> emit) async {
@@ -46,9 +39,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       if (response.statusCode == 200) {
         final responseData = response.data;
 
-        // Convert the token object to a JSON string
         final token = responseData['token'];
-        // Save the token string to secure storage
         await secureStorage.write(key: 'token', value: token);
 
         // Read and print the token

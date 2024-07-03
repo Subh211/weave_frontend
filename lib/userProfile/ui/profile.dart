@@ -5,18 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:weave_frontend/userProfile/bloc/userProfile_bloc.dart';
 import 'package:weave_frontend/userProfile/bloc/userProfile_event.dart';
 import 'package:weave_frontend/userProfile/bloc/userProfile_state.dart';
-import 'package:weave_frontend/userSinglePost/ui/singlePost.dart';
+import 'package:weave_frontend/userUpdate/ui/updateUser.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
-
-import '../../models/profileModel.dart';
 
 
 class OwnProfile extends StatefulWidget {
-  //final Profile profile;
 
   const OwnProfile({
     Key? key,
-   // required this.profile
   }) : super(key: key);
 
   @override
@@ -27,7 +23,7 @@ class OwnProfile extends StatefulWidget {
 
 
 class _OwnProfileState extends State<OwnProfile> {
-  int selectedIndex = 0; // State to track the selected icon index
+  int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +39,7 @@ class _OwnProfileState extends State<OwnProfile> {
         } else if (state is UserProfileLoaded) {
           var profile = state.profile;
           var user = profile.user;
-          var posts = profile.posts.posts; // Assuming posts is a list of Post objects
+          var posts = profile.posts.posts;
 
           double screenHeight = MediaQuery.of(context).size.height;
           double screenWidth = MediaQuery.of(context).size.width;
@@ -51,16 +47,6 @@ class _OwnProfileState extends State<OwnProfile> {
 
 
           return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Weave',
-                style: GoogleFonts.clickerScript(
-                  fontWeight: FontWeight.w600,
-                  color: Color.fromRGBO(165, 179, 158, 1),
-                  fontSize: AppBar().preferredSize.height,
-                ),
-              ),
-            ),
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +105,11 @@ class _OwnProfileState extends State<OwnProfile> {
                   SizedBox(height: screenHeight * 0.02),
                   Center(
                     child: CustomTextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => UpdateUser())
+                        );
+                      },
                       showPencilIcon: true,
                       showBorder: false,
                       horizontalPadding: screenWidth * 0.26,
@@ -133,8 +123,20 @@ class _OwnProfileState extends State<OwnProfile> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.045),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        // IconButton(
+                        //   onPressed: () {
+                        //     setState(() {
+                        //       selectedIndex = 0;
+                        //     });
+                        //   },
+                        //   icon: FaIcon(
+                        //     FontAwesomeIcons.tableCells,
+                        //     size: iconSize,
+                        //     color: selectedIndex == 0 ? Colors.black : Colors.grey,
+                        //   ),
+                        // ),
                         IconButton(
                           onPressed: () {
                             setState(() {
@@ -142,35 +144,23 @@ class _OwnProfileState extends State<OwnProfile> {
                             });
                           },
                           icon: FaIcon(
-                            FontAwesomeIcons.tableCells,
+                            FontAwesomeIcons.squarePlus,
                             size: iconSize,
                             color: selectedIndex == 0 ? Colors.black : Colors.grey,
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedIndex = 1;
-                            });
-                          },
-                          icon: FaIcon(
-                            FontAwesomeIcons.squarePlus,
-                            size: iconSize,
-                            color: selectedIndex == 1 ? Colors.black : Colors.grey,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedIndex = 2;
-                            });
-                          },
-                          icon: FaIcon(
-                            FontAwesomeIcons.bookmark,
-                            size: iconSize,
-                            color: selectedIndex == 2 ? Colors.black : Colors.grey,
-                          ),
-                        ),
+                        // IconButton(
+                        //   onPressed: () {
+                        //     setState(() {
+                        //       selectedIndex = 2;
+                        //     });
+                        //   },
+                        //   icon: FaIcon(
+                        //     FontAwesomeIcons.bookmark,
+                        //     size: iconSize,
+                        //     color: selectedIndex == 2 ? Colors.black : Colors.grey,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -186,12 +176,6 @@ class _OwnProfileState extends State<OwnProfile> {
                     itemBuilder: (context, index) {
                       var post = posts[index];
                       return InkWell(
-// onTap: () {
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(builder: (context) => SinglePost(post: post)),
-//   );
-// },
                         child: Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(

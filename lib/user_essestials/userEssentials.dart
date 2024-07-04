@@ -399,6 +399,9 @@ class _ToggleHeartButtonState extends State<ToggleHeartButton> {
   }
 }
 
+
+
+
 class CustomTextButtonForFriend extends StatefulWidget {
   final VoidCallback onPressed;
   final double horizontalPadding;
@@ -410,6 +413,8 @@ class CustomTextButtonForFriend extends StatefulWidget {
   final bool showBorder; // Control the visibility of the border
   final bool isFriend; // Initialize this parameter
   final String friendId;
+  final ValueChanged<bool> onFollowersStatusChanged; // Add this callback
+
 
   CustomTextButtonForFriend({
     required this.onPressed,
@@ -421,7 +426,8 @@ class CustomTextButtonForFriend extends StatefulWidget {
     this.showPencilIcon = false, // Default to not showing the pencil icon
     this.showBorder = true, // Default to showing the border
     required this.isFriend, // Initialize this parameter
-    required this.friendId, // Add friendId parameter
+    required this.friendId,
+    required this.onFollowersStatusChanged// Add friendId parameter
   });
 
   @override
@@ -471,6 +477,7 @@ class _CustomTextButtonState extends State<CustomTextButtonForFriend> {
       }
 
       if (response.statusCode == 200) {
+        widget.onFollowersStatusChanged(isFriend);
         print('Successfully sent follow/unfollow status');
       } else {
         print('Server error: ${response.statusCode}');
@@ -545,3 +552,174 @@ class _CustomTextButtonState extends State<CustomTextButtonForFriend> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// class CustomTextButtonForFriend extends StatefulWidget {
+//   final VoidCallback onPressed;
+//   final double horizontalPadding;
+//   final double screenHeight;
+//   final double? fontSize;
+//   final double? buttonHeight;
+//   final Color? backgroundColor;
+//   final bool showPencilIcon; // Control the visibility of the pencil icon
+//   final bool showBorder; // Control the visibility of the border
+//   final bool isFriend; // Initialize this parameter
+//   final String friendId;
+//
+//   CustomTextButtonForFriend({
+//     required this.onPressed,
+//     required this.horizontalPadding,
+//     required this.screenHeight,
+//     this.fontSize,
+//     this.buttonHeight,
+//     this.backgroundColor,
+//     this.showPencilIcon = false, // Default to not showing the pencil icon
+//     this.showBorder = true, // Default to showing the border
+//     required this.isFriend, // Initialize this parameter
+//     required this.friendId, // Add friendId parameter
+//   });
+//
+//   @override
+//   _CustomTextButtonState createState() => _CustomTextButtonState();
+// }
+//
+// class _CustomTextButtonState extends State<CustomTextButtonForFriend> {
+//   late bool isToggled;
+//   final Dio dio = Dio();
+//   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+//
+//   // Replace with your server URL
+//   final String baseUrl = 'https://weave-backend-pyfu.onrender.com/api/v1/friend';
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     isToggled = widget.isFriend;
+//   }
+//
+//   Future<String?> _getStoredToken() async {
+//     return await secureStorage.read(key: 'token');
+//   }
+//
+//   Future<void> sendFollowStatus(bool isFriend, String token) async {
+//     final String url = '$baseUrl/${widget.friendId}';
+//     try {
+//       Response response;
+//       if (isFriend) {
+//         response = await dio.delete(
+//           url,
+//           options: Options(
+//             headers: {
+//               HttpHeaders.authorizationHeader: 'Bearer $token',
+//             },
+//           ),
+//         );
+//       } else {
+//         response = await dio.post(
+//           url,
+//           options: Options(
+//             headers: {
+//               HttpHeaders.authorizationHeader: 'Bearer $token',
+//             },
+//           ),
+//         );
+//       }
+//
+//       if (response.statusCode == 200) {
+//         print('Successfully sent follow/unfollow status');
+//       } else {
+//         print('Server error: ${response.statusCode}');
+//       }
+//     } catch (e) {
+//       print('Network error: $e');
+//     }
+//   }
+//
+//   void _toggleButton() async {
+//     final token = await _getStoredToken();
+//     if (token == null) {
+//       // Handle missing token
+//       print('Token is missing');
+//       return;
+//     }
+//
+//     setState(() {
+//       isToggled = !isToggled;
+//     });
+//
+//     // The isToggled variable is already toggled above, so pass the opposite to sendFollowStatus
+//     await sendFollowStatus(!isToggled, token);
+//     widget.onPressed();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: widget.buttonHeight ?? widget.screenHeight * 0.048,
+//       child: TextButton(
+//         onPressed: _toggleButton,
+//         style: TextButton.styleFrom(
+//           backgroundColor: widget.backgroundColor ?? Color(0xFFC3B0E7), // Background color (light purple)
+//           padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding), // Padding
+//           shape: RoundedRectangleBorder(
+//             borderRadius: BorderRadius.circular(10), // Rounded corners
+//             side: widget.showBorder
+//                 ? BorderSide(
+//               color: Colors.black,
+//               width: 1, // Border if showBorder is true
+//             )
+//                 : BorderSide(
+//               color: Colors.transparent,
+//               width: 1, // No border if showBorder is false
+//             ),
+//           ),
+//           shadowColor: Colors.black, // Shadow color
+//           elevation: 10, // Elevation
+//         ),
+//         child: Row(
+//           mainAxisSize: MainAxisSize.min,
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             if (widget.showPencilIcon) // Conditionally render the pencil icon
+//               Icon(Icons.edit, color: Colors.white),
+//             if (widget.showPencilIcon)
+//               SizedBox(width: 8), // Add some space if the pencil icon is shown
+//             Text(
+//               isToggled ? 'Unfollow' : 'Follow',
+//               style: GoogleFonts.poppins(
+//                 textStyle: TextStyle(
+//                   fontWeight: FontWeight.w600,
+//                   fontSize: widget.fontSize ?? widget.screenHeight * 0.018,
+//                   color: Colors.white,
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+
+

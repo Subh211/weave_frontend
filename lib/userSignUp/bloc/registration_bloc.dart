@@ -64,7 +64,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         emit(RegistrationFailure(errorMessage));
       } else {
         print('Error: ${error.toString()}');
-        emit(RegistrationFailure('An error occurred. Please try again.'));
+        emit(RegistrationFailure('Failure ${error.toString()}'));
       }
     }
   }

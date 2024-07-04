@@ -62,7 +62,7 @@ class _GetmailState extends State<Getmail> {
               //   context,
               //   MaterialPageRoute(builder: (context) => Feed()),
               // );
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => FutureBuilder<String?>(
                   future: FlutterSecureStorage().read(key: 'token'),

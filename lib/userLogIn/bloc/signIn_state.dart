@@ -23,7 +23,7 @@ class SignInSuccess extends SignInState {
 class SignInFailure extends SignInState {
   final String error;
 
-  const SignInFailure(errorMessage, {required this.error});
+  const SignInFailure({required this.error});
 
   @override
   List<Object> get props => [error];

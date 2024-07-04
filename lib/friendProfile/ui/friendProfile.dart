@@ -140,7 +140,7 @@ class _friendProfileState extends State<FriendProfile> {
                   Center(
                     child: CustomTextButtonForFriend(
                       onPressed: () {
-                        print('isFriend $isFriend');
+                        //print('isFriend $isFriend');
                       },
                       showPencilIcon: false,
                       showBorder: false,

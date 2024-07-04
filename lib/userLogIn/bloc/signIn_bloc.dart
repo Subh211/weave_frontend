@@ -49,7 +49,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         emit(SignInSuccess(responseData['message']));
       } else {
         final errorMessage = response.data['message'] ?? 'Failed to sign in. Please try again.';
-        emit(SignInFailure(errorMessage, error: 'Failed to sign in. Please try again.'));
+        emit(SignInFailure(error: 'Failed to sign in. Please try again.'));
       }
     } catch (error) {
       if (error is DioError) {
@@ -58,10 +58,10 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
           print('Error Response Data: ${error.response?.data}');
         }
         final errorMessage = error.response?.data['message'] ?? 'An error occurred. Please try again.';
-        emit(SignInFailure(errorMessage, error: errorMessage));
+        emit(SignInFailure(error: 'Error: $errorMessage'));
       } else {
         print('Error: ${error.toString()}');
-        emit(SignInFailure('An error occurred. Please try again.', error: 'An error occurred. Please try again.'));
+        emit(SignInFailure(error: 'Error: ${error.toString()}'));
       }
     }
   }

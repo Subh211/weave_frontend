@@ -52,12 +52,21 @@ class _FeedState extends State<Feed> {
 
   void _onItemTapped(int index) async {
     final token = await _getToken;
-    if (token != null && index == 2 && !_profileFetched) {
-      print("Fetching user profile...");
-      BlocProvider.of<GetUserProfileBloc>(context).add(FetchUserProfileEvent());
-      setState(() {
-        _profileFetched = true;
-      });
+    // if (token != null && index == 2 && !_profileFetched) {
+    //   print("Fetching user profile...");
+    //   BlocProvider.of<GetUserProfileBloc>(context).add(FetchUserProfileEvent());
+    //   setState(() {
+    //     _profileFetched = true;
+    //   });
+    // }
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => BlocProvider(
+          create: (context) => GetUserProfileBloc(getUserProfileRepository, token!),
+          child: OwnProfile(),
+        ))
+      );
     }
     setState(() {
       _selectedIndex = index;

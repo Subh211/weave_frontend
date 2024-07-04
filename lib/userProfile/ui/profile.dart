@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:weave_frontend/userFeed/ui/feed.dart';
 import 'package:weave_frontend/userProfile/bloc/userProfile_bloc.dart';
 import 'package:weave_frontend/userProfile/bloc/userProfile_event.dart';
 import 'package:weave_frontend/userProfile/bloc/userProfile_state.dart';
@@ -47,6 +48,26 @@ class _OwnProfileState extends State<OwnProfile> {
 
 
           return Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  // Navigate back to the Feed screen with a 'refresh' result
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => Feed())
+                  );
+                },
+              ),
+              title: Text(
+                'Weave',
+                style: GoogleFonts.clickerScript(
+                  fontWeight: FontWeight.w600,
+                  color: Color.fromRGBO(165, 179, 158, 1),
+                  fontSize: AppBar().preferredSize.height,
+                ),
+              ),
+            ),
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

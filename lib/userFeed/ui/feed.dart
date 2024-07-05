@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:weave_frontend/allUser/bloc/allUser_bloc.dart';
+import 'package:weave_frontend/allUser/bloc/allUser_event.dart';
+import 'package:weave_frontend/allUser/ui/allUser.dart';
 import 'package:weave_frontend/optionScreen/ui/optionScreen.dart';
 import 'package:weave_frontend/userAddPost/ui/addPost.dart';
 import 'package:weave_frontend/userAddPost/bloc/addPost_bloc.dart';
@@ -36,17 +39,20 @@ class _FeedState extends State<Feed> {
 
   List<Widget> _widgetOptions(String token) {
     return <Widget>[
-      Posts(), // Index 0
-      //Posts(), // Index 1
+      Posts(),
+      //Posts(),
       BlocProvider(
         create: (context) => AddPostBloc('https://weave-backend-pyfu.onrender.com', token),
         child: AddPost(),
-      ), // Index 2
-      //Posts(), // Index 3
+      ),
+      BlocProvider(
+        create: (context) => AlluserBloc()..add(GetAllUser()),
+        child: AllUser(),
+      ),
       BlocProvider(
         create: (context) => GetUserProfileBloc(getUserProfileRepository, token),
-        child: OwnProfile(), // Replace with your Profile widget
-      ), // Index 4
+        child: OwnProfile(),
+      ),
     ];
   }
 
@@ -63,8 +69,8 @@ class _FeedState extends State<Feed> {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => BlocProvider(
-          create: (context) => GetUserProfileBloc(getUserProfileRepository, token!),
-          child: OwnProfile(),
+          create: (context) => AlluserBloc()..add(GetAllUser()),
+          child: AllUser(),
         ))
       );
     }
@@ -72,6 +78,15 @@ class _FeedState extends State<Feed> {
       _selectedIndex = index;
     });
 
+    if (index == 3) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => BlocProvider(
+            create: (context) => GetUserProfileBloc(getUserProfileRepository, token!),
+            child: OwnProfile(),
+          ))
+      );
+    }
     if (index == 1) {
       Navigator.push(
         context,
@@ -162,26 +177,26 @@ class _FeedState extends State<Feed> {
                             alignment: Alignment.center,
                             child: FaIcon(
                               FontAwesomeIcons.plus,
-                              color: Colors.purple,
+                              color: Colors.white,
                               size: 20,
                             ),
                           ),
                         ),
                       ),
-                      // IconButton(
-                      //   icon: Icon(
-                      //     Icons.group,
-                      //     color: _selectedIndex == 3 ? Colors.black : Colors.grey,
-                      //   ),
-                      //   onPressed: () => _onItemTapped(3),
-                      // ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.group,
+                          color: _selectedIndex == 2 ? Colors.black : Colors.grey,
+                        ),
+                        onPressed: () => _onItemTapped(2),
+                      ),
                       IconButton(
                         icon: CircleAvatar(
                           radius: 15,
                           backgroundImage: AssetImage('assests/images/profileimage.png'),
                         ),
                         onPressed: () {
-                          _onItemTapped(2);
+                          _onItemTapped(3);
                         },
                       ),
                     ],

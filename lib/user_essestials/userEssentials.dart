@@ -60,6 +60,7 @@ class textFields extends StatelessWidget {
   final double screenWidth;
   final String hintText;
   final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   const textFields({
     Key? key,
@@ -68,13 +69,14 @@ class textFields extends StatelessWidget {
     required this.hintText,
     this.controller,
     this.star,
+    this.validator
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: screenWidth * 0.47,
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         maxLines: 1, // Limit to one line
         obscureText: star ?? false,
@@ -96,6 +98,7 @@ class textFields extends StatelessWidget {
             overflow: TextOverflow.ellipsis, // Handle overflow
           ),
         ),
+        validator: validator,
       ),
     );
   }

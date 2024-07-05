@@ -118,6 +118,12 @@ class _SignInState extends State<SignIn> {
                                         screenHeight: screenHeight,
                                         screenWidth: screenWidth,
                                         hintText: 'Enter email',
+                                        // validator: (value) {
+                                        //   if (value == null || value.isEmpty || value.length <= 10) {
+                                        //     return 'Please enter an Email';
+                                        //   }
+                                        //   return null;
+                                        // },
                                       ),
                                     ),
                                     SizedBox(

@@ -8,6 +8,10 @@ import 'package:weave_frontend/userProfile/bloc/userProfile_event.dart';
 import 'package:weave_frontend/userProfile/bloc/userProfile_state.dart';
 import 'package:weave_frontend/userUpdate/ui/updateUser.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
+import 'package:weave_frontend/usersFeed/bloc/usersFeed_bloc.dart';
+import 'package:weave_frontend/usersFeed/bloc/usersFeed_event.dart';
+import 'package:weave_frontend/usersFeed/bloc/usersFeed_repository.dart';
+import 'package:weave_frontend/usersFeed/ui/usersFeed.dart';
 
 
 class OwnProfile extends StatefulWidget {
@@ -196,28 +200,42 @@ class _OwnProfileState extends State<OwnProfile> {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.02),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 3,
-                          mainAxisSpacing: 3,
-                        ),
-                        itemBuilder: (context, index) {
-                          var post = posts[index];
-                          return InkWell(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(post.image),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    BlocProvider(create: (context) => UserPostBloc(UserPostRepository())..add(FetchUserPosts()),
+                                                child: OwnPosts(),
+                                    ),
+
+                            )
                           );
                         },
-                        itemCount: posts.length,
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 3,
+                            mainAxisSpacing: 3,
+                          ),
+                          itemBuilder: (context, index) {
+                            var post = posts[index];
+                            return InkWell(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(post.image),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          itemCount: posts.length,
+                        ),
                       ),
                     ],
                   ),

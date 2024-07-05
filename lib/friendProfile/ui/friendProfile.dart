@@ -520,6 +520,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_bloc.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_event.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_state.dart';
+import 'package:weave_frontend/friendsFeed/bloc/friendsFeed_bloc.dart';
+import 'package:weave_frontend/friendsFeed/bloc/friendsFeed_event.dart';
+import 'package:weave_frontend/friendsFeed/ui/friendsFeed.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
 
 class FriendProfile extends StatefulWidget {
@@ -695,28 +698,42 @@ class _friendProfileState extends State<FriendProfile> {
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.02),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 3,
-                      mainAxisSpacing: 3,
-                    ),
-                    itemBuilder: (context, index) {
-                      var post = posts[index];
-                      return InkWell(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(post.image),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                BlocProvider(create: (context) => FriendPostBloc()..add(FetchFriendPosts(friendId: user.id )),
+                                  child: FriendPosts(friendId: user.id),
+                                ),
+
+                          )
                       );
                     },
-                    itemCount: posts.length,
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 3,
+                        mainAxisSpacing: 3,
+                      ),
+                      itemBuilder: (context, index) {
+                        var post = posts[index];
+                        return InkWell(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(post.image),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      itemCount: posts.length,
+                    ),
                   ),
                 ],
               ),

@@ -28,21 +28,22 @@ class CommentScreen extends StatelessWidget {
                 final comment = state.comments[index];
                  return SingleChildScrollView(
                   child: Container(
-                    color: Colors.white,
+                    color: Colors.transparent,
                     constraints: BoxConstraints(
                       minHeight: screenHeight * 0.075,
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(width: 10.0),
                           CircleAvatar(
                             radius: 29.0, // Adjust this value to change the size
                             backgroundImage: NetworkImage(comment.userImage),
                           ),
 
-                          SizedBox(width: 8.0), // Adding some space between avatar and text
+                          SizedBox(width: 10.0), // Adding some space between avatar and text
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

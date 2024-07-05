@@ -72,6 +72,16 @@ class PostsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Weave',
+          style: GoogleFonts.clickerScript(
+            fontWeight: FontWeight.w600,
+            color: Color.fromRGBO(165, 179, 158, 1),
+            fontSize: AppBar().preferredSize.height,
+          ),
+        ),
+      ),
       body: BlocBuilder<FriendPostBloc, FriendPostState>(
         builder: (context, state) {
           if (state is FriendPostLoading) {

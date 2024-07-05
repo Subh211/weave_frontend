@@ -33,6 +33,7 @@ class EachlikeScreen extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(width: 10.0),
                         CircleAvatar(
                           backgroundImage: NetworkImage(like.userProfileImage),
                         ),

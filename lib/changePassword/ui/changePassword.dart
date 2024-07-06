@@ -40,7 +40,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           future: _getToken,
           builder: (context,snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: ProcessIndicator());
             }
             else {
               final token = snapshot.data;
@@ -65,7 +65,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     child: BlocBuilder<ChangePasswordBloc,ChangePasswordState> (
                       builder: (context,state) {
                         if (state is ChangePasswordLoading) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: ProcessIndicator());
                         }
                         return
                           SingleChildScrollView(

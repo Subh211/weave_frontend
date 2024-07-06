@@ -19,17 +19,8 @@ import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_event.dart'
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_repository.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/ui/singleLike.dart';
 import 'package:weave_frontend/models/friendsFeedModel.dart';
-import 'package:weave_frontend/models/postModel.dart';
-import 'package:weave_frontend/userProfile/bloc/userProfile_bloc.dart';
-import 'package:weave_frontend/userProfile/ui/profile.dart';
-import 'package:weave_frontend/userSinglePost/bloc/post_repository.dart';
-import 'package:weave_frontend/userSinglePost/bloc/singlePost_bloc.dart';
-import 'package:weave_frontend/userSinglePost/bloc/singlePost_event.dart';
-import 'package:weave_frontend/userSinglePost/bloc/singlePost_state.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
 import 'package:weave_frontend/userProfile/bloc/userProfile_repository.dart';
-
-
 import '../../comments/singleComment/ui/singleComment.dart';
 
 class FriendPosts extends StatelessWidget {
@@ -86,7 +77,7 @@ class PostsView extends StatelessWidget {
       body: BlocBuilder<FriendPostBloc, FriendPostState>(
         builder: (context, state) {
           if (state is FriendPostLoading) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: ProcessIndicator());
           } else if (state is FriendPostLoaded) {
             return ListView.builder(
               itemCount: state.posts.length,

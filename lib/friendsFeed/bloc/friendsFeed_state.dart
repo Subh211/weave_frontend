@@ -1,6 +1,4 @@
 import 'package:weave_frontend/models/friendsFeedModel.dart';
-import 'package:weave_frontend/models/postModel.dart';
-import 'package:weave_frontend/models/usersFeedModel.dart';
 
 abstract class FriendPostState {}
 

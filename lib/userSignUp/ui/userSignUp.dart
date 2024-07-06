@@ -58,10 +58,6 @@ class _GetmailState extends State<Getmail> {
             if (state is RegistrationSuccess) {
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text(state.message)));
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => Feed()),
-              // );
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => FutureBuilder<String?>(
@@ -69,7 +65,7 @@ class _GetmailState extends State<Getmail> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Scaffold(
-                        body: Center(child: CircularProgressIndicator()),
+                        body: Center(child: ProcessIndicator()),
                       );
                     } else {
                       final token = snapshot.data ?? '';
@@ -91,7 +87,7 @@ class _GetmailState extends State<Getmail> {
           child: BlocBuilder<RegistrationBloc, RegistrationState>(
             builder: (context, state) {
               if (state is RegistrationLoading) {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: ProcessIndicator());
               }
               return SingleChildScrollView(
                 child: Container(

@@ -37,7 +37,7 @@ class _DeleteUserState extends State<DeleteUser> {
         future: _getToken,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: ProcessIndicator());
           } else {
             final token = snapshot.data;
             if (token != null) {
@@ -60,7 +60,7 @@ class _DeleteUserState extends State<DeleteUser> {
                   child: BlocBuilder<DeleteUserBloc, DeleteUserState>(
                     builder: (context, state) {
                       if (state is DeleteUserLoading) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: ProcessIndicator());
                       }
                       return SingleChildScrollView(
                         child: Container(

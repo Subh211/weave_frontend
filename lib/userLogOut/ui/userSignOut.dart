@@ -36,7 +36,7 @@ class _SignOutState extends State<SignOut> {
           future: _getToken,
           builder: (context,snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: ProcessIndicator());
             } else {
               final token = snapshot.data;
               if (token != null) {
@@ -59,7 +59,7 @@ class _SignOutState extends State<SignOut> {
                     child: BlocBuilder<SignOutBloc,SignOutState> (
                       builder: (context,state) {
                         if (state is SignOutLoading) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: ProcessIndicator());
                         }
                         return
                           SingleChildScrollView(

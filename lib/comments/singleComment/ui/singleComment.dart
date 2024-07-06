@@ -50,14 +50,14 @@ class _DoCommentState extends State<DoComment> {
           child: BlocBuilder<CommentBloc, CommentState>(
             builder: (context, state) {
               if (state is CommentInProgress) {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: ProcessIndicator());
               }
               return Scaffold(
                 body: FutureBuilder<String?> (
                     future: _getToken,
                     builder: (context,snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: ProcessIndicator());
                       } else {
                         final token = snapshot.data;
                         if (token != null) {
@@ -74,7 +74,7 @@ class _DoCommentState extends State<DoComment> {
                               child: BlocBuilder<CommentBloc, CommentState>(
                                 builder: (context, state) {
                                   if (state is CommentInProgress) {
-                                    return Center(child: CircularProgressIndicator());
+                                    return Center(child: ProcessIndicator());
                                   }
                                   return SingleChildScrollView(
                                     child: Container(

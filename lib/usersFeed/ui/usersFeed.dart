@@ -7,30 +7,18 @@ import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_bloc.da
 import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_event.dart';
 import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_repository.dart';
 import 'package:weave_frontend/comments/commentScreen/ui/commentScreen.dart';
-import 'package:weave_frontend/friendProfile/bloc/friendProfile_bloc.dart';
-import 'package:weave_frontend/friendProfile/bloc/friendProfile_event.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_repository.dart';
-import 'package:weave_frontend/friendProfile/ui/friendProfile.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_bloc.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_event.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_repository.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/ui/singleLike.dart';
-import 'package:weave_frontend/models/postModel.dart';
 import 'package:weave_frontend/models/usersFeedModel.dart';
-import 'package:weave_frontend/userProfile/bloc/userProfile_bloc.dart';
-import 'package:weave_frontend/userProfile/ui/profile.dart';
-import 'package:weave_frontend/userSinglePost/bloc/post_repository.dart';
-import 'package:weave_frontend/userSinglePost/bloc/singlePost_bloc.dart';
-import 'package:weave_frontend/userSinglePost/bloc/singlePost_event.dart';
-import 'package:weave_frontend/userSinglePost/bloc/singlePost_state.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
 import 'package:weave_frontend/userProfile/bloc/userProfile_repository.dart';
 import 'package:weave_frontend/usersFeed/bloc/usersFeed_bloc.dart';
 import 'package:weave_frontend/usersFeed/bloc/usersFeed_event.dart';
 import 'package:weave_frontend/usersFeed/bloc/usersFeed_repository.dart';
 import 'package:weave_frontend/usersFeed/bloc/usersFeed_state.dart';
-
-
 import '../../comments/singleComment/ui/singleComment.dart';
 
 class OwnPosts extends StatelessWidget {
@@ -86,7 +74,7 @@ class PostsView extends StatelessWidget {
       body: BlocBuilder<UserPostBloc, UserPostState>(
         builder: (context, state) {
           if (state is UserPostLoading) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: ProcessIndicator());
           } else if (state is UserPostLoaded) {
             return ListView.builder(
               itemCount: state.posts.length,
@@ -142,31 +130,7 @@ class PostItem extends StatelessWidget {
     return Column(
       children: [
         InkWell(
-          onTap: ()  {
-            // final token = await _retrieveToken();
-            // if (post.username! == username) {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => BlocProvider(
-            //         create: (context) => GetUserProfileBloc(getUserProfileRepository, token!),
-            //         child: OwnProfile(),
-            //       ),
-            //     ),
-            //   );
-            // } else {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => BlocProvider(
-            //         create: (context) => GetFriendProfileBloc(getFriendProfileRepository)
-            //           ..add(FetchFriendProfileEvent(friendId: post.friendId!)),
-            //         child: FriendProfile(friendId: post.friendId!),
-            //       ),
-            //     ),
-            //   );
-            // }
-          },
+          onTap: ()  {},
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

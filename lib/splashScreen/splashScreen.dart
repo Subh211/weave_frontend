@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Scaffold(
-                body: Center(child: CircularProgressIndicator()),
+                body: Center(child: ProcessIndicator()),
               );
             } else {
               final token = snapshot.data ?? '';

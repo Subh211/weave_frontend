@@ -42,7 +42,7 @@ class _SignInState extends State<SignIn> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Scaffold(
-                        body: Center(child: CircularProgressIndicator()),
+                        body: Center(child: ProcessIndicator()),
                       );
                     } else {
                       final token = snapshot.data ?? '';
@@ -64,7 +64,7 @@ class _SignInState extends State<SignIn> {
           child: BlocBuilder<SignInBloc, SignInState>(
             builder: (context, state) {
               if (state is SignInLoading) {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: ProcessIndicator());
               }
               return SingleChildScrollView(
                 child: Container(
@@ -118,12 +118,6 @@ class _SignInState extends State<SignIn> {
                                         screenHeight: screenHeight,
                                         screenWidth: screenWidth,
                                         hintText: 'Enter email',
-                                        // validator: (value) {
-                                        //   if (value == null || value.isEmpty || value.length <= 10) {
-                                        //     return 'Please enter an Email';
-                                        //   }
-                                        //   return null;
-                                        // },
                                       ),
                                     ),
                                     SizedBox(

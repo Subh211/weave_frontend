@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_bloc.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_state.dart';
+import 'package:weave_frontend/user_essestials/userEssentials.dart';
 
 class EachlikeScreen extends StatelessWidget {
   const EachlikeScreen({super.key});
@@ -17,7 +18,7 @@ class EachlikeScreen extends StatelessWidget {
       body: BlocBuilder<LikeBloc, LikeState>(
         builder: (context, state) {
           if (state is LikeLoading) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: ProcessIndicator());
           } else if (state is LikeLoaded) {
             return ListView.builder(
               itemCount: state.likes.length,

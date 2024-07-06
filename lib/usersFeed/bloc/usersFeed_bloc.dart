@@ -2,12 +2,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:weave_frontend/models/usersFeedModel.dart';
-import 'package:weave_frontend/userSinglePost/bloc/singlePost_event.dart';
-import 'package:weave_frontend/userSinglePost/bloc/singlePost_state.dart';
 import 'package:weave_frontend/usersFeed/bloc/usersFeed_event.dart';
 import 'package:weave_frontend/usersFeed/bloc/usersFeed_repository.dart';
 import 'package:weave_frontend/usersFeed/bloc/usersFeed_state.dart';
-import '../../models/postModel.dart';
 
 class UserPostBloc extends Bloc<UserPostEvent, UserPostState> {
   final UserPostRepository userPostRepository;
@@ -32,7 +29,6 @@ class UserPostBloc extends Bloc<UserPostEvent, UserPostState> {
     }
     try {
       final List<usersPost> result = await userPostRepository.fetchUserPosts(storedToken);
-      //final posts = result['data'] as List<Post>;
       emit(UserPostLoaded(result));
     } catch (e) {
       emit(UserPostError(e.toString()));

@@ -624,4 +624,28 @@ class profileText extends StatelessWidget {
 }
 
 
+class ProcessIndicator extends StatelessWidget {
+
+  const ProcessIndicator({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        width: 40.0,
+        height: 40.0,
+        child: CircularProgressIndicator(
+          strokeWidth: 5,
+          color: Color(0xFFC3B0E7),
+          backgroundColor: Colors.white,
+        ),
+      ),
+    );
+  }
+}
+
+
+
 

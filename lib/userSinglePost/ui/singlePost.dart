@@ -24,8 +24,6 @@ import 'package:weave_frontend/userSinglePost/bloc/singlePost_event.dart';
 import 'package:weave_frontend/userSinglePost/bloc/singlePost_state.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
 import 'package:weave_frontend/userProfile/bloc/userProfile_repository.dart';
-
-
 import '../../comments/singleComment/ui/singleComment.dart';
 
 class Posts extends StatelessWidget {
@@ -70,7 +68,7 @@ class PostsView extends StatelessWidget {
       body: BlocBuilder<PostBloc, PostState>(
         builder: (context, state) {
           if (state is PostLoading) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: ProcessIndicator());
           } else if (state is PostLoaded) {
             return ListView.builder(
               itemCount: state.posts.length,
@@ -165,7 +163,7 @@ class PostItem extends StatelessWidget {
                 child: CircleAvatar(
                   backgroundImage: post.profileImage != null
                       ? NetworkImage(post.profileImage!)
-                      : AssetImage('assets/images/placeholder.png') as ImageProvider,
+                      : AssetImage('assests/images/placeholder.png') as ImageProvider,
                   onBackgroundImageError: (_, __) {
                     print("Error loading profile image");
                   },

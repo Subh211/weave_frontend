@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_bloc.dart';
 import 'package:weave_frontend/comments/commentScreen/bloc/commentScreen_state.dart';
 import 'package:weave_frontend/likes/likeScreen/likeScreen/bloc/like_state.dart';
+import 'package:weave_frontend/user_essestials/userEssentials.dart';
 
 class CommentScreen extends StatelessWidget {
   const CommentScreen({super.key});
@@ -20,7 +21,7 @@ class CommentScreen extends StatelessWidget {
       body: BlocBuilder<CommentScreenBloc, CommentScreenState>(
         builder: (context, state) {
           if (state is LikeLoading) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: ProcessIndicator());
           } else if (state is CommentScreenLoaded) {
             return ListView.builder(
               itemCount: state.comments.length,

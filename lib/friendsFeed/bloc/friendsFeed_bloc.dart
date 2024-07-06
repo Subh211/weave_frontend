@@ -1,17 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:weave_frontend/friendsFeed/bloc/friendsFeed_event.dart';
 import 'package:weave_frontend/friendsFeed/bloc/friendsFeed_state.dart';
 import 'package:weave_frontend/models/friendsFeedModel.dart';
-import 'package:weave_frontend/models/usersFeedModel.dart';
-import 'package:weave_frontend/userSinglePost/bloc/singlePost_event.dart';
-import 'package:weave_frontend/userSinglePost/bloc/singlePost_state.dart';
-import 'package:weave_frontend/usersFeed/bloc/usersFeed_event.dart';
-import 'package:weave_frontend/usersFeed/bloc/usersFeed_state.dart';
-import '../../models/postModel.dart';
+
 
 class FriendPostBloc extends Bloc<FriendPostEvent, FriendPostState> {
 

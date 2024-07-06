@@ -44,7 +44,7 @@ class _OptionScreenState extends State<OptionScreen> {
         future: _getToken,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: ProcessIndicator());
           } else if (snapshot.hasError || !snapshot.hasData) {
             return Center(child: Text('Token retrieval failed.'));
           } else {

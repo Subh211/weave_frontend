@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,7 +59,7 @@ class _UpdateUserState extends State<UpdateUser> {
         future: _getToken,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: ProcessIndicator());
           } else {
             final token = snapshot.data;
             if (token != null) {
@@ -83,7 +82,7 @@ class _UpdateUserState extends State<UpdateUser> {
                   child: BlocBuilder<UpdateUserBloc, UpdateUserState>(
                     builder: (context, state) {
                       if (state is UpdateUserLoading) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: ProcessIndicator());
                       }
                       return SingleChildScrollView(
                         child: Container(
@@ -138,15 +137,6 @@ class _UpdateUserState extends State<UpdateUser> {
                                                ),
                                              ),
                                              Flexible(flex: 1, child: Container()),
-                                             // Flexible(
-                                             //   flex: 2,
-                                             //   child: textFields(
-                                             //     controller: bioController,
-                                             //     screenHeight: screenHeight,
-                                             //     screenWidth: screenWidth,
-                                             //     hintText: 'bio',
-                                             //   ),
-                                             // ),
                                              Flexible(flex: 1, child: Container()),
                                              Flexible(
                                                flex: 5,

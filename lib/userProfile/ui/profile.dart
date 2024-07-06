@@ -46,10 +46,10 @@ class _OwnProfileState extends State<OwnProfile> {
           builder: (context, state) {
             if (state is UserProfileInitial) {
               BlocProvider.of<GetUserProfileBloc>(context).add(FetchUserProfileEvent());
-              return Center(child: CircularProgressIndicator());
+              return Center(child: ProcessIndicator());
             } else if (state is UserProfileLoading) {
               return Scaffold(
-                body: Center(child: CircularProgressIndicator()),
+                body: Center(child: ProcessIndicator()),
               );
             } else if (state is UserProfileLoaded) {
               var profile = state.profile;
@@ -167,18 +167,6 @@ class _OwnProfileState extends State<OwnProfile> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // IconButton(
-                            //   onPressed: () {
-                            //     setState(() {
-                            //       selectedIndex = 0;
-                            //     });
-                            //   },
-                            //   icon: FaIcon(
-                            //     FontAwesomeIcons.tableCells,
-                            //     size: iconSize,
-                            //     color: selectedIndex == 0 ? Colors.black : Colors.grey,
-                            //   ),
-                            // ),
                             IconButton(
                               onPressed: () {
                                 setState(() {
@@ -191,18 +179,6 @@ class _OwnProfileState extends State<OwnProfile> {
                                 color: selectedIndex == 0 ? Colors.black : Colors.grey,
                               ),
                             ),
-                            // IconButton(
-                            //   onPressed: () {
-                            //     setState(() {
-                            //       selectedIndex = 2;
-                            //     });
-                            //   },
-                            //   icon: FaIcon(
-                            //     FontAwesomeIcons.bookmark,
-                            //     size: iconSize,
-                            //     color: selectedIndex == 2 ? Colors.black : Colors.grey,
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),

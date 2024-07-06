@@ -20,14 +20,13 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           useMaterial3: true,
         ),
         home: SplashScreen());
@@ -37,42 +36,4 @@ class MyApp extends StatelessWidget {
 
 
 
-//
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-// import 'package:weave_frontend/userProfile/bloc/userProfile_bloc.dart';
-// import 'package:weave_frontend/userProfile/bloc/userProfile_repository.dart';
-// import 'package:weave_frontend/splashScreen/splashScreen.dart';
-//
-// void main() {
-//   runApp(MyApp());
-// }
-//
-// class MyApp extends StatelessWidget {
-//   final GetUserProfileRepository getUserProfileRepository = GetUserProfileRepository();
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return FutureBuilder<String?>(
-//       future: FlutterSecureStorage().read(key: 'token'),
-//       builder: (context, snapshot) {
-//         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return Center(child: CircularProgressIndicator());
-//         } else {
-//           final token = snapshot.data ?? '';
-//           return BlocProvider(
-//             create: (context) => GetUserProfileBloc(getUserProfileRepository, token),
-//             child: MaterialApp(
-//               title: 'Weave',
-//               theme: ThemeData(
-//                 primarySwatch: Colors.blue,
-//               ),
-//               home: SplashScreen(),
-//             ),
-//           );
-//         }
-//       },
-//     );
-//   }
-// }
+

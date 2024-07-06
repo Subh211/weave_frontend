@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,7 +58,7 @@ class _AddPostState extends State<AddPost> {
         future: _getToken,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: ProcessIndicator());
           } else {
             final token = snapshot.data;
             if (token != null) {
@@ -82,19 +81,13 @@ class _AddPostState extends State<AddPost> {
                   child: BlocBuilder<AddPostBloc, AddPostState>(
                     builder: (context, state) {
                       if (state is AddPostLoading) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: ProcessIndicator());
                       }
                       return SingleChildScrollView(
                         child: Container(
                           height: MediaQuery.of(context).size.height,
                           child: Column(
                             children: [
-                              // Expanded(
-                              //   flex: 4,
-                              //   child: weaveText(
-                              //     screenHeight: screenHeight,
-                              //   ),
-                              // ),
                               Expanded(
                                 flex: 3,
                                 child: Container(),

@@ -71,7 +71,7 @@ class _SearchUserState extends State<SearchUser> {
       body: BlocBuilder<AlluserBloc,AlluserState> (
         builder: (context,state) {
           if (state is AlluserStateLoading) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: ProcessIndicator());
           } else if (state is AlluserStateLoaded) {
             return ListView.builder(
                 itemCount: state.users.length,

@@ -616,27 +616,31 @@ class _friendProfileState extends State<FriendProfile> {
                       ),
                       Row(
                         children: [
-                          Text(
-                            '${posts.length}  \n Posts ',
-                            textAlign: TextAlign.center,
-                          ),
+                          // Text(
+                          //   '${posts.length}  \n Posts ',
+                          //   textAlign: TextAlign.center,
+                          // ),
+                          profileText(primaryText: '${posts.length}', secondaryText: '\nposts'),
                           SizedBox(
                             width: screenWidth * 0.05,
                           ),
-                          Text(
-                            '${profile.friendDetails.following.length}  \n followings ',
-                            textAlign: TextAlign.center,
-                          ),
+                          // Text(
+                          //   '${profile.friendDetails.following.length}  \n followings ',
+                          //   textAlign: TextAlign.center,
+                          // ),
+                          profileText(primaryText: '${profile.friendDetails.following.length}', secondaryText: '\nfollowings'),
                           SizedBox(
                             width: screenWidth * 0.05,
                           ),
                           ValueListenableBuilder<int>(
                               valueListenable: followersNotifier,
                               builder:(context,followersCount,child) {
-                                return Text(
-                                  '$followersCount  \n followers ',
-                                  textAlign: TextAlign.center,
-                                );
+                                return
+                                //   Text(
+                                //   '$followersCount  \n followers ',
+                                //   textAlign: TextAlign.center,
+                                // );
+                                profileText(primaryText: '$followersCount', secondaryText: '\nfollowers');
                               }
                           ),
                         ],
@@ -648,9 +652,33 @@ class _friendProfileState extends State<FriendProfile> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(user.displayName),
-                        Text(user.name),
-                        Text(user.bio),
+                        Text(user.displayName,
+                          style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        ),
+                        Text(user.name,
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        ),
+                        Text(user.bio,
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),

@@ -151,12 +151,15 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:weave_frontend/allUser/bloc/allUser_event.dart';
 import 'package:weave_frontend/allUser/bloc/allUser_state.dart';
 import 'package:weave_frontend/models/allUser.dart';
 
 class AlluserBloc extends Bloc<AlluserEvent, AlluserState> {
+  final FlutterSecureStorage secureStorage = FlutterSecureStorage();
   List<allUserModel> allusers = [];
 
   AlluserBloc() : super(AlluserStateInitial()) {
@@ -164,11 +167,23 @@ class AlluserBloc extends Bloc<AlluserEvent, AlluserState> {
     on<SearchAllUser>(_onSearchAllUser);
   }
 
+  Future<String?> _getStoredToken() async {
+    final storedToken = await secureStorage.read(key: 'token');
+    print('Stored Token: $storedToken'); // Add this line
+    return storedToken;
+  }
+
   Future<void> _onGetAllUser(GetAllUser event, Emitter<AlluserState> emit) async {
     emit(AlluserStateLoading());
     try {
+      final token = await _getStoredToken();
+
       final response = await http.get(
         Uri.parse('https://weave-backend-pyfu.onrender.com/api/v1/user/alluser'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       );
 
       print('API Response Status: ${response.statusCode}'); // Debugging
@@ -192,8 +207,14 @@ class AlluserBloc extends Bloc<AlluserEvent, AlluserState> {
   Future<void> _onSearchAllUser(SearchAllUser event, Emitter<AlluserState> emit) async {
     emit(AlluserStateLoading());
     try {
+      final token = await _getStoredToken();
+
       final response = await http.get(
         Uri.parse('https://weave-backend-pyfu.onrender.com/api/v1/user/alluser'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       );
 
       print('API Response Status: ${response.statusCode}'); // Debugging

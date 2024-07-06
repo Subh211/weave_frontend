@@ -112,6 +112,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weave_frontend/allUser/bloc/allUser_bloc.dart';
 import 'package:weave_frontend/allUser/bloc/allUser_state.dart';
@@ -119,6 +120,10 @@ import 'package:weave_frontend/friendProfile/bloc/friendProfile_bloc.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_event.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_repository.dart';
 import 'package:weave_frontend/friendProfile/ui/friendProfile.dart';
+import 'package:weave_frontend/userFeed/ui/feed.dart';
+import 'package:weave_frontend/userProfile/bloc/userProfile_bloc.dart';
+import 'package:weave_frontend/userProfile/bloc/userProfile_repository.dart';
+import 'package:weave_frontend/userProfile/ui/profile.dart';
 
 class AllUser extends StatefulWidget {
   const AllUser({super.key});
@@ -129,6 +134,17 @@ class AllUser extends StatefulWidget {
 
 class _AllUserState extends State<AllUser> {
   GetFriendProfileRepository getFriendProfileRepository = GetFriendProfileRepository();
+  GetUserProfileRepository getUserProfileRepository = GetUserProfileRepository();
+  late Future<String?> _getToken = _retrieveToken();
+  @override
+  void initState() {
+    super.initState();
+    _getToken = _retrieveToken();
+  }
+
+  Future<String?> _retrieveToken() async {
+    return await FlutterSecureStorage().read(key: 'token');
+  }
 
   Future<bool> _onWillPop() async {
     Navigator.of(context).pop(true);
@@ -162,17 +178,30 @@ class _AllUserState extends State<AllUser> {
                     final user = state.users[index];
                     return SingleChildScrollView(
                       child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BlocProvider(
-                                create: (context) => GetFriendProfileBloc(getFriendProfileRepository)
-                                  ..add(FetchFriendProfileEvent(friendId: user.id)),
-                                child: FriendProfile(friendId: user.id),
+                        onTap: () async{
+                          final token = await _retrieveToken();
+                          if (user.username == user.displayName) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BlocProvider(
+                                  create: (context) => GetUserProfileBloc(getUserProfileRepository, token!),
+                                  child: OwnProfile(),
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BlocProvider(
+                                  create: (context) => GetFriendProfileBloc(getFriendProfileRepository)
+                                    ..add(FetchFriendProfileEvent(friendId: user.id)),
+                                  child: FriendProfile(friendId: user.id),
+                                ),
+                              ),
+                            );
+                          }
                         },
                         child: Container(
                           color: Colors.transparent,
@@ -219,3 +248,4 @@ class _AllUserState extends State<AllUser> {
     );
   }
 }
+

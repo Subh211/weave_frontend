@@ -62,26 +62,17 @@ class _OwnProfileState extends State<OwnProfile> {
 
 
               return Scaffold(
-                // appBar: AppBar(
-                //   leading: IconButton(
-                //     icon: Icon(Icons.arrow_back),
-                //     onPressed: () {
-                //       // Navigate back to the Feed screen with a 'refresh' result
-                //       Navigator.pushReplacement(
-                //           context,
-                //           MaterialPageRoute(builder: (context) => Feed())
-                //       );
-                //     },
-                //   ),
-                //   title: Text(
-                //     'Weave',
-                //     style: GoogleFonts.clickerScript(
-                //       fontWeight: FontWeight.w600,
-                //       color: Color.fromRGBO(165, 179, 158, 1),
-                //       fontSize: AppBar().preferredSize.height,
-                //     ),
-                //   ),
-                // ),
+                appBar: AppBar(
+                  title: Text(
+                    'Weave',
+                    style: GoogleFonts.clickerScript(
+                      fontWeight: FontWeight.w600,
+                      color: Color.fromRGBO(165, 179, 158, 1),
+                      fontSize: AppBar().preferredSize.height,
+                    ),
+                  ),
+                  automaticallyImplyLeading: false,
+                ),
                 body: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,24 +95,15 @@ class _OwnProfileState extends State<OwnProfile> {
                           ),
                           Row(
                             children: [
-                              Text(
-                                '${posts!.length}  \n Posts ',
-                                textAlign: TextAlign.center,
-                              ),
+                              profileText(primaryText: '${posts!.length}', secondaryText: '\nposts'),
                               SizedBox(
                                 width: screenWidth * 0.05,
                               ),
-                              Text(
-                                '${profile.friendDetails!.following!.length}  \n followings ',
-                                textAlign: TextAlign.center,
-                              ),
+                              profileText(primaryText: '${profile.friendDetails!.following!.length}', secondaryText: '\nfollowings'),
                               SizedBox(
                                 width: screenWidth * 0.05,
                               ),
-                              Text(
-                                '${profile.friendDetails!.followers!.length}  \n followers ',
-                                textAlign: TextAlign.center,
-                              ),
+                              profileText(primaryText: '${profile.friendDetails!.followers!.length}', secondaryText: '\nfollowers')
                             ],
                           ),
                         ],
@@ -131,9 +113,34 @@ class _OwnProfileState extends State<OwnProfile> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(user.displayName),
-                            Text(user.name),
-                            Text(user.bio!),
+                            Text(user.displayName,
+                              style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            Text(user.name,
+                              style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              user.bio!,
+                              style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),

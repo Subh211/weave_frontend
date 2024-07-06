@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:weave_frontend/allUser/bloc/allUser_bloc.dart';
 import 'package:weave_frontend/allUser/bloc/allUser_event.dart';
 import 'package:weave_frontend/allUser/bloc/allUser_state.dart';
@@ -7,6 +8,9 @@ import 'package:weave_frontend/friendProfile/bloc/friendProfile_bloc.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_event.dart';
 import 'package:weave_frontend/friendProfile/bloc/friendProfile_repository.dart';
 import 'package:weave_frontend/friendProfile/ui/friendProfile.dart';
+import 'package:weave_frontend/userProfile/bloc/userProfile_bloc.dart';
+import 'package:weave_frontend/userProfile/bloc/userProfile_repository.dart';
+import 'package:weave_frontend/userProfile/ui/profile.dart';
 import 'package:weave_frontend/user_essestials/userEssentials.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -21,6 +25,17 @@ class SearchUser extends StatefulWidget {
 class _SearchUserState extends State<SearchUser> {
   GetFriendProfileRepository getFriendProfileRepository = GetFriendProfileRepository();
   final TextEditingController searchController = TextEditingController();
+  GetUserProfileRepository getUserProfileRepository = GetUserProfileRepository();
+  late Future<String?> _getToken = _retrieveToken();
+  @override
+  void initState() {
+    super.initState();
+    _getToken = _retrieveToken();
+  }
+
+  Future<String?> _retrieveToken() async {
+    return await FlutterSecureStorage().read(key: 'token');
+  }
 
 
   @override
@@ -36,9 +51,10 @@ class _SearchUserState extends State<SearchUser> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(width: 10.0),
           textFields(
               screenHeight: MediaQuery.of(context).size.width * 0.1,
-              screenWidth: MediaQuery.of(context).size.height * 0.85,
+              screenWidth: MediaQuery.of(context).size.height * 0.8,
               hintText: "Search",
               controller: searchController,
           ),
@@ -63,17 +79,30 @@ class _SearchUserState extends State<SearchUser> {
                   final user = state.users[index];
                   return SingleChildScrollView(
                     child:InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BlocProvider(
-                              create: (context) => GetFriendProfileBloc(getFriendProfileRepository)
-                                ..add(FetchFriendProfileEvent(friendId: user.id)),
-                              child: FriendProfile(friendId: user.id),
+                      onTap: () async{
+                        final token = await _retrieveToken();
+                        if (user.username == user.displayName) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (context) => GetUserProfileBloc(getUserProfileRepository, token!),
+                                child: OwnProfile(),
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (context) => GetFriendProfileBloc(getFriendProfileRepository)
+                                  ..add(FetchFriendProfileEvent(friendId: user.id)),
+                                child: FriendProfile(friendId: user.id),
+                              ),
+                            ),
+                          );
+                        }
                       },
                       child: Container(
                         color: Colors.transparent,
@@ -92,7 +121,6 @@ class _SearchUserState extends State<SearchUser> {
                                 backgroundImage: NetworkImage(user.photoURL),
                                 //backgroundImage: AssetImage("assests/images/vk2.jpeg"),
                               ),
-
                               SizedBox(width: 10.0), // Adding some space between avatar and text
                               Text(
                                 user.displayName,
@@ -120,3 +148,6 @@ class _SearchUserState extends State<SearchUser> {
     );
   }
 }
+
+
+

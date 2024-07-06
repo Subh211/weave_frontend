@@ -61,6 +61,22 @@ class _OptionScreenState extends State<OptionScreen> {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => SignOut()));
                     },
                   ),
+                  optionItem(
+                    screenWidth: screenWidth,
+                    screenHeight: screenHeight,
+                    text: "Update Account",
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateUser()));
+                    },
+                  ),
+                  optionItem(
+                    screenWidth: screenWidth,
+                    screenHeight: screenHeight,
+                    text: "Change Password",
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePassword()));
+                    },
+                  ),
                   BlocProvider(
                     create: (context) => DeleteUserBloc('https://weave-backend-pyfu.onrender.com', token),
                     child: optionItem(
@@ -71,22 +87,6 @@ class _OptionScreenState extends State<OptionScreen> {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => DeleteUser()));
                       },
                     ),
-                  ),
-                  optionItem(
-                    screenWidth: screenWidth,
-                    screenHeight: screenHeight,
-                    text: "Change Password",
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePassword()));
-                    },
-                  ),
-                  optionItem(
-                    screenWidth: screenWidth,
-                    screenHeight: screenHeight,
-                    text: "Update Account",
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateUser()));
-                    },
                   ),
                 ],
               ),

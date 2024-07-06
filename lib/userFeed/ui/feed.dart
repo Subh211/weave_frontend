@@ -7,6 +7,7 @@ import 'package:weave_frontend/allUser/bloc/allUser_bloc.dart';
 import 'package:weave_frontend/allUser/bloc/allUser_event.dart';
 import 'package:weave_frontend/allUser/ui/allUser.dart';
 import 'package:weave_frontend/optionScreen/ui/optionScreen.dart';
+import 'package:weave_frontend/searchUser/ui/searchUser.dart';
 import 'package:weave_frontend/userAddPost/ui/addPost.dart';
 import 'package:weave_frontend/userAddPost/bloc/addPost_bloc.dart';
 import 'package:weave_frontend/userProfile/bloc/userProfile_bloc.dart';
@@ -40,7 +41,11 @@ class _FeedState extends State<Feed> {
   List<Widget> _widgetOptions(String token) {
     return <Widget>[
       Posts(),
-      //Posts(),
+      BlocProvider(
+        create: (context) => AlluserBloc(),
+          //..add(SearchAllUser(searchTerm: '')),
+        child: SearchUser(),
+      ),
       BlocProvider(
         create: (context) => AddPostBloc('https://weave-backend-pyfu.onrender.com', token),
         child: AddPost(),
@@ -65,7 +70,16 @@ class _FeedState extends State<Feed> {
     //     _profileFetched = true;
     //   });
     // }
-    if (index == 2) {
+    if (index == 1) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => BlocProvider(
+            create: (context) => AlluserBloc(),
+            child: SearchUser(),
+          ))
+      );
+    }
+    if (index == 3) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => BlocProvider(
@@ -78,7 +92,7 @@ class _FeedState extends State<Feed> {
       _selectedIndex = index;
     });
 
-    if (index == 3) {
+    if (index == 4) {
       Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => BlocProvider(
@@ -87,7 +101,7 @@ class _FeedState extends State<Feed> {
           ))
       );
     }
-    if (index == 1) {
+    if (index == 2) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => AddPost()),
@@ -152,16 +166,16 @@ class _FeedState extends State<Feed> {
                         ),
                         onPressed: () => _onItemTapped(0),
                       ),
-                      // IconButton(
-                      //   icon: Icon(
-                      //     Icons.search,
-                      //     color: _selectedIndex == 1 ? Colors.black : Colors.grey,
-                      //   ),
-                      //   onPressed: () => _onItemTapped(1),
-                      // ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.search,
+                          color: _selectedIndex == 1 ? Colors.black : Colors.grey,
+                        ),
+                        onPressed: () => _onItemTapped(1),
+                      ),
                       TextButton(
                         onPressed: () {
-                          return _onItemTapped(1);
+                          return _onItemTapped(2);
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: Color(0xFFC3B0E7),
@@ -186,9 +200,9 @@ class _FeedState extends State<Feed> {
                       IconButton(
                         icon: Icon(
                           Icons.group,
-                          color: _selectedIndex == 2 ? Colors.black : Colors.grey,
+                          color: _selectedIndex == 3 ? Colors.black : Colors.grey,
                         ),
-                        onPressed: () => _onItemTapped(2),
+                        onPressed: () => _onItemTapped(3),
                       ),
                       IconButton(
                         icon: CircleAvatar(
@@ -196,7 +210,7 @@ class _FeedState extends State<Feed> {
                           backgroundImage: AssetImage('assests/images/profileimage.png'),
                         ),
                         onPressed: () {
-                          _onItemTapped(3);
+                          _onItemTapped(4);
                         },
                       ),
                     ],

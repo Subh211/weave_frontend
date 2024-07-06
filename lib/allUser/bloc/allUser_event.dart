@@ -8,3 +8,14 @@ abstract class AlluserEvent extends Equatable{
 }
 
 class GetAllUser extends AlluserEvent{}
+
+class SearchAllUser extends AlluserEvent{
+  final String searchTerm;
+
+  SearchAllUser({
+    required this.searchTerm
+  });
+
+  @override
+  List<Object?> get props => [searchTerm];
+}

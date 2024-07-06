@@ -54,6 +54,7 @@ class _OptionScreenState extends State<OptionScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   optionItem(
+                    screenWidth: screenWidth,
                     screenHeight: screenHeight,
                     text: "Log Out",
                     onTap: () {
@@ -63,6 +64,7 @@ class _OptionScreenState extends State<OptionScreen> {
                   BlocProvider(
                     create: (context) => DeleteUserBloc('https://weave-backend-pyfu.onrender.com', token),
                     child: optionItem(
+                      screenWidth: screenWidth,
                       screenHeight: screenHeight,
                       text: "Delete Account",
                       onTap: () {
@@ -71,6 +73,7 @@ class _OptionScreenState extends State<OptionScreen> {
                     ),
                   ),
                   optionItem(
+                    screenWidth: screenWidth,
                     screenHeight: screenHeight,
                     text: "Change Password",
                     onTap: () {
@@ -78,6 +81,7 @@ class _OptionScreenState extends State<OptionScreen> {
                     },
                   ),
                   optionItem(
+                    screenWidth: screenWidth,
                     screenHeight: screenHeight,
                     text: "Update Account",
                     onTap: () {
@@ -93,24 +97,43 @@ class _OptionScreenState extends State<OptionScreen> {
     );
   }
 
-  Widget optionItem({required double screenHeight, required String text, required VoidCallback onTap}) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.black,
-            width: 1.0,
+  Widget optionItem({required double screenHeight, required double screenWidth, required String text, required VoidCallback onTap}) {
+    return Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+          child: InkWell(
+            onTap: onTap,
+            child: Center(
+              child: optionText(
+                text:text,
+                screenHeight: screenHeight,
+              ),
+            ),
           ),
         ),
-      ),
-      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-      child: InkWell(
-        onTap: onTap,
-        child: optionText(
-          text: text,
-          screenHeight: screenHeight,
+        Positioned(
+          bottom: 0,
+          left: screenWidth * 0.2,
+          right: screenWidth * 0.2,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Color.fromRGBO(165, 179, 158, 1).withOpacity(0.8),
+                  offset: Offset(0, 2),
+                  blurRadius: 4.0,
+                  spreadRadius: 1.0,
+                ),
+              ],
+            ),
+            child: Container(
+              height: 1.0,
+              color: Colors.black,
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }

@@ -81,6 +81,7 @@ class PostsView extends StatelessWidget {
             fontSize: AppBar().preferredSize.height,
           ),
         ),
+        automaticallyImplyLeading: false,
       ),
       body: BlocBuilder<FriendPostBloc, FriendPostState>(
         builder: (context, state) {

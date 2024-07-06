@@ -592,6 +592,7 @@ class _friendProfileState extends State<FriendProfile> {
                   fontSize: AppBar().preferredSize.height,
                 ),
               ),
+              automaticallyImplyLeading: false,
             ),
             body: SingleChildScrollView(
               child: Column(

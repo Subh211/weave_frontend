@@ -38,7 +38,7 @@ class _SearchUserState extends State<SearchUser> {
         children: [
           textFields(
               screenHeight: MediaQuery.of(context).size.width * 0.1,
-              screenWidth: MediaQuery.of(context).size.height * 0.65,
+              screenWidth: MediaQuery.of(context).size.height * 0.85,
               hintText: "Search",
               controller: searchController,
           ),
@@ -50,6 +50,7 @@ class _SearchUserState extends State<SearchUser> {
               icon: Icon(Icons.search))
         ],
       ),
+      automaticallyImplyLeading: false,
       ),
       body: BlocBuilder<AlluserBloc,AlluserState> (
         builder: (context,state) {

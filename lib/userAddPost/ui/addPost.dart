@@ -89,12 +89,12 @@ class _AddPostState extends State<AddPost> {
                           height: MediaQuery.of(context).size.height,
                           child: Column(
                             children: [
-                              Expanded(
-                                flex: 4,
-                                child: weaveText(
-                                  screenHeight: screenHeight,
-                                ),
-                              ),
+                              // Expanded(
+                              //   flex: 4,
+                              //   child: weaveText(
+                              //     screenHeight: screenHeight,
+                              //   ),
+                              // ),
                               Expanded(
                                 flex: 3,
                                 child: Container(),

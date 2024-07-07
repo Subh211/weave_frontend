@@ -1,4 +1,5 @@
 class FriendsPost {
+  final bool? isLiked;
   final String? postId;
   final String? friendsId;
   final String? name;
@@ -11,6 +12,7 @@ class FriendsPost {
   final List<String> comments;
 
   FriendsPost({
+    this.isLiked,
     this.postId,
     this.friendsId,
     this.name,
@@ -25,6 +27,7 @@ class FriendsPost {
 
   factory FriendsPost.fromJson(Map<String, dynamic> json) {
     return FriendsPost(
+      isLiked: json['isLiked'] as bool?,
       postId: json['postId'] as String?,
       friendsId: json['friendsId'] as String?,
       name: json['name'] as String?,
@@ -43,6 +46,7 @@ class FriendsPost {
   @override
   String toString() {
     return '{'
+        'isLiked: $isLiked, '
         'postId: $postId, '
         'friendsId: $friendsId, '
         'name: $name, '

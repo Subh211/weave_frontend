@@ -73,6 +73,9 @@ class _SearchUserState extends State<SearchUser> {
           if (state is AlluserStateLoading) {
             return Center(child: ProcessIndicator());
           } else if (state is AlluserStateLoaded) {
+            if (state.users.isEmpty) {
+              return Center(child: Text('No users found'));
+            }
             return ListView.builder(
                 itemCount: state.users.length,
                 itemBuilder: (context,index) {

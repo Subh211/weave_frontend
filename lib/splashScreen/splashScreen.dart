@@ -65,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             weaveText(screenHeight: screenHeight),
             SizedBox(height: 20),
-            CircularProgressIndicator(),
+            ProcessIndicator(),
           ],
         ),
       ),

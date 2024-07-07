@@ -70,6 +70,9 @@ class PostsView extends StatelessWidget {
           if (state is PostLoading) {
             return Center(child: ProcessIndicator());
           } else if (state is PostLoaded) {
+            if (state.posts.isEmpty) {
+              return Center(child: Text('No posts'));
+            }
             return ListView.builder(
               itemCount: state.posts.length,
               itemBuilder: (context, index) {

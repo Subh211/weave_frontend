@@ -422,7 +422,115 @@ class _ToggleHeartButtonState extends State<ToggleHeartButton> {
             },
             icon: FaIcon(
               isHeartPressed ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
-              color: isHeartPressed ? Colors.red : Colors.black,
+              color: isHeartPressed ? Color(0xFFC3B0E7) : Colors.black,
+            ),
+          );
+        }
+      },
+    );
+  }
+}
+
+class ToggleHeartButtonForUserPosts extends StatefulWidget {
+  final bool isLiked;
+  final String friendId;
+  final String postId;
+  final ValueChanged<bool> onLikeStatusChanged; // Add this callback
+
+  ToggleHeartButtonForUserPosts({
+    required this.isLiked,
+    required this.friendId,
+    required this.postId,
+    required this.onLikeStatusChanged, // Initialize callback
+  });
+
+  @override
+  _ToggleHeartButtonForUserPosts createState() => _ToggleHeartButtonForUserPosts();
+}
+
+class _ToggleHeartButtonForUserPosts extends State<ToggleHeartButtonForUserPosts> {
+  late bool isToggeled;
+  final Dio dio = Dio();
+  final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+  final String baseUrl = 'https://weave-backend-pyfu.onrender.com/api/v1/post';
+
+  @override
+  void initState() {
+    super.initState();
+    isToggeled = widget.isLiked;
+  }
+
+  Future<String?> _getStoredToken() async {
+    return await secureStorage.read(key: 'token');
+  }
+
+  Future<void> sendLikeStatus(bool isLiked, String token) async {
+    final String url = '$baseUrl/like/${widget.friendId}';
+    final String query = '?postId=${widget.postId}';
+
+    try {
+      Response response;
+      if (isLiked) {
+        response = await dio.post(
+          '$url$query',
+          options: Options(
+            headers: {
+              HttpHeaders.authorizationHeader: 'Bearer $token',
+            },
+          ),
+        );
+      } else {
+        response = await dio.delete(
+          '$url$query',
+          options: Options(
+            headers: {
+              HttpHeaders.authorizationHeader: 'Bearer $token',
+            },
+          ),
+        );
+      }
+
+      if (response.statusCode == 200) {
+        // Notify the parent widget about the like status change
+        widget.onLikeStatusChanged(isLiked);
+      } else {
+        print('Server error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Network error: $e');
+    }
+  }
+
+  void _toggleButton() async {
+    final token = await _getStoredToken();
+    if (token == null) {
+      print('Token is missing');
+      return;
+    }
+
+    setState(() {
+      isToggeled = !isToggeled;
+    });
+
+    await sendLikeStatus(isToggeled, token); // Pass isToggled directly
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<String?>(
+      future: _getStoredToken(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
+          return Center(child: Text('Token is missing or there was an error'));
+        } else {
+          final token = snapshot.data!;
+          return IconButton(
+            onPressed: _toggleButton,
+            icon: FaIcon(
+              isToggeled ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+              color: isToggeled ? Color(0xFFC3B0E7) : Colors.black,
             ),
           );
         }
@@ -622,7 +730,6 @@ class profileText extends StatelessWidget {
     );
   }
 }
-
 
 class ProcessIndicator extends StatelessWidget {
 

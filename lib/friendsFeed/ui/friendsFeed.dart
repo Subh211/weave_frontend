@@ -167,6 +167,7 @@ class PostItem extends StatelessWidget {
                 post.name ?? 'Unknown User',
                 style: GoogleFonts.poppins(
                   textStyle: TextStyle(
+                    fontSize: 17,
                     color: Colors.black87,
                     fontWeight: FontWeight.w600,
                   ),
@@ -194,7 +195,8 @@ class PostItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(width: screenWidth * 0.01),
-              ToggleHeartButton(
+              ToggleHeartButtonForUserPosts(
+                isLiked: post.isLiked!,
                 postId: post.postId!,
                 friendId: post.friendsId!,
                 onLikeStatusChanged: (isLiked) {
@@ -243,11 +245,10 @@ class PostItem extends StatelessWidget {
                   },
                   child: Text(
                     'Liked by $likesCount others',
-                    style: GoogleFonts.lora(
+                    style: GoogleFonts.poppins(
                       textStyle: TextStyle(
                         color: Colors.black87,
-                        fontWeight: FontWeight.w600,
-                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -272,11 +273,10 @@ class PostItem extends StatelessWidget {
             Flexible(
               child: Text(
                 post.caption ?? '',
-                style: GoogleFonts.lora(
+                style: GoogleFonts.poppins(
                   textStyle: TextStyle(
                     color: Colors.black87,
                     fontWeight: FontWeight.w500,
-                    fontStyle: FontStyle.italic,
                   ),
                 ),
               ),
@@ -301,7 +301,7 @@ class PostItem extends StatelessWidget {
               },
               child: Text(
                 'All comments',
-                style: GoogleFonts.lora(
+                style: GoogleFonts.poppins(
                   textStyle: TextStyle(
                     color: Colors.grey[400],
                     fontWeight: FontWeight.w500,

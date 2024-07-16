@@ -1,3 +1,8 @@
+import 'dart:io';
+import 'dart:ui';
+
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -20,6 +25,45 @@ import 'package:weave_frontend/usersFeed/bloc/usersFeed_event.dart';
 import 'package:weave_frontend/usersFeed/bloc/usersFeed_repository.dart';
 import 'package:weave_frontend/usersFeed/bloc/usersFeed_state.dart';
 import '../../comments/singleComment/ui/singleComment.dart';
+
+Future<String?> _getStoredToken() async {
+  final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+  final storedToken = await secureStorage.read(key: 'token');
+  print('Stored Token: $storedToken'); // Add this line
+  return storedToken;
+}
+
+Future<void> DeletePost (BuildContext context,String postId) async {
+  try{
+    final storedToken = await _getStoredToken();
+    final dio = Dio();
+
+    final response = await dio.delete(
+      'https://weave-backend-pyfu.onrender.com/api/v1/post/delete/?postId=$postId',
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer $storedToken',
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Post deleted successfully'))
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error occured'))
+      );
+    }
+  }
+      catch(error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error occured ${error.toString()}'))
+        );
+      }
+}
 
 class OwnPosts extends StatelessWidget {
   final UserPostRepository userPostRepository = UserPostRepository();
@@ -206,6 +250,80 @@ class PostItem extends StatelessWidget {
                 },
                 icon: FaIcon(FontAwesomeIcons.comments),
               ),
+              Spacer(),
+              IconButton(
+                  onPressed: () {
+                    showCupertinoDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Center(
+                            child: Container(
+                              width: screenWidth * 1, // Set your desired width
+                              height: screenHeight * 1, // Set your desired height
+                              child: CupertinoAlertDialog(
+                                title: Text('Delete',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                      color: Color.fromRGBO(165, 179, 158, 1),
+                                      fontWeight: FontWeight.w500,
+                                        fontSize: screenHeight * 0.025
+                                    ),
+                                  ),
+                                ),
+                                content: Text('Delete the post?',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: screenHeight * 0.02
+                                    ),
+                                  ),
+                                ),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    isDefaultAction: true,
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('No',
+                                      style: GoogleFonts.poppins(
+                                        textStyle: TextStyle(
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  CupertinoDialogAction(
+                                    isDestructiveAction: true,
+                                    onPressed: () async {
+                                      await DeletePost(context, post.postId!);
+                                      Navigator.of(context).pop();
+                                      //refresh
+                                    },
+                                    child: Text('Yes',
+                                      style: GoogleFonts.poppins(
+                                        textStyle: TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  icon: Icon(Icons.delete_outline_outlined,
+                    size: 28,
+                  )
+              )
             ],
           ),
         ),
@@ -300,4 +418,9 @@ class PostItem extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
 
